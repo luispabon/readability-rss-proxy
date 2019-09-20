@@ -21,7 +21,7 @@ class Feed
     /**
      * @ORM\Column(type="text")
      */
-    private $url;
+    private $feedUrl;
 
     /**
      * @var \App\Entity\FeedItem[]|ArrayCollection
@@ -29,6 +29,16 @@ class Feed
      * @ORM\OneToMany(targetEntity="FeedItem", mappedBy="Feed", cascade={"all"})
      */
     private $feedItems;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $title;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $description;
 
     public function __construct()
     {
@@ -40,14 +50,14 @@ class Feed
         return $this->id;
     }
 
-    public function getUrl(): ?string
+    public function getFeedUrl(): ?string
     {
-        return $this->url;
+        return $this->feedUrl;
     }
 
-    public function setUrl(string $url): self
+    public function setFeedUrl(string $feedUrl): self
     {
-        $this->url = $url;
+        $this->feedUrl = $feedUrl;
 
         return $this;
     }
@@ -83,5 +93,29 @@ class Feed
     public function getFeedItems(): Collection
     {
         return $this->feedItems;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

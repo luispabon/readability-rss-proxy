@@ -9,7 +9,10 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Url</th>
+                <th>FeedUrl</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Icon</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -17,7 +20,10 @@
         {% for feed in feeds %}
             <tr>
                 <td>{{ feed.id }}</td>
-                <td>{{ feed.url }}</td>
+                <td>{{ feed.feedUrl }}</td>
+                <td>{{ feed.title }}</td>
+                <td>{{ feed.description }}</td>
+                <td>{{ feed.icon }}</td>
                 <td>
                     <a href="{{ path('feed_show', {'id': feed.id}) }}">show</a>
                     <a href="{{ path('feed_edit', {'id': feed.id}) }}">edit</a>
@@ -25,7 +31,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="6">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

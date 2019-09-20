@@ -1,14 +1,25 @@
+parameters:
+    # Database
+    database_host:     '%env(DB_HOST)%'
+    database_port:     '%env(DB_PORT)%'
+    database_name:     '%env(DB_NAME)%'
+    database_user:     '%env(DB_USER)%'
+    database_password: '%env(DB_PASSWORD)%'
+    database_version:  '%env(DB_VERSION)%'
+    database_driver:   '%env(DB_DRIVER)%'
+    database_protocol: '%env(DB_PROTOCOL)%'
+    database_charset:  '%env(DB_CHARSET)%'
+
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_mysql'
-        server_version: '5.7'
-        charset: utf8mb4
+        driver:         '%database_driver%'
+        url:            '%database_protocol%://%database_user%:%database_password%@%database_host%:%database_port%/%database_name%'
+        server_version: '%database_version%'
+        charset:        '%database_charset%'
         default_table_options:
-            charset: utf8mb4
+            charset: '%database_charset%'
             collate: utf8mb4_unicode_ci
 
-        url: '%env(resolve:DATABASE_URL)%'
     orm:
         auto_generate_proxy_classes: true
         naming_strategy: doctrine.orm.naming_strategy.underscore

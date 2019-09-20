@@ -23,7 +23,11 @@
                 <td>{{ feed.feedUrl }}</td>
                 <td>{{ feed.title }}</td>
                 <td>{{ feed.description }}</td>
-                <td>{{ feed.icon }}</td>
+                <td>
+                    {% if feed.icon %}
+                        <img src="{{ feed.icon }}"/>
+                    {% endif %}
+                </td>
                 <td>
                     <a href="{{ path('feed_show', {'id': feed.id}) }}" class="ui button">show</a>
                     <a href="{{ path('feed_edit', {'id': feed.id}) }}" class="ui primary button">edit</a>

@@ -15,7 +15,6 @@
     },
     "require-dev": {
         "symfony/debug-pack": "^1.0",
-        "symfony/maker-bundle": "^1.13",
         "symfony/orm-pack": "^1.0"
     },
     "config": {

@@ -1,4 +1,7 @@
 {
+    "andreskrey/readability.php": {
+        "version": "v2.1.0"
+    },
     "csa/guzzle-bundle": {
         "version": "3.0",
         "recipe": {

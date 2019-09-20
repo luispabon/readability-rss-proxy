@@ -2,14 +2,15 @@
 
 namespace App\Command;
 
+use andreskrey\Readability\Readability;
 use App\Repository\FeedRepository;
 use FeedIo\FeedIo;
+use GuzzleHttp\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class FeedFetchAllCommand extends Command
 {
@@ -19,11 +20,25 @@ class FeedFetchAllCommand extends Command
      * @var \App\Repository\FeedRepository
      */
     private $feedRepository;
+    /**
+     * @var \andreskrey\Readability\Readability
+     */
+    private $readability;
+    /**
+     * @var \GuzzleHttp\Client
+     */
+    private $guzzle;
 
-    public function __construct(FeedIo $feedIo, FeedRepository $feedRepository)
-    {
+    public function __construct(
+        FeedIo $feedIo,
+        FeedRepository $feedRepository,
+        Readability $readability,
+        Client $guzzle
+    ) {
         $this->feedIo = $feedIo;
         $this->feedRepository = $feedRepository;
+        $this->readability = $readability;
+        $this->guzzle = $guzzle;
 
         parent::__construct();
     }
@@ -44,16 +59,29 @@ class FeedFetchAllCommand extends Command
 
         foreach ($feeds as $feed) {
             $result = $this->feedIo->read($feed->getUrl());
-            foreach ($result->getFeed() as $feedItem) {
-                dd($feedItem);
-            }
-            
-            $doc = $result->getFeed();
 
+//            dd($result->getFeed());
+            foreach ($result->getFeed() as $feedItem) {
+
+                /** @var \FeedIo\Feed\ItemInterface $feedItem */
+                dd($feedItem);
+//                dd($re)
+
+                $rawContents = $this->guzzle->get($feedItem->getLink())->getBody()->getContents();
+                
+                echo $rawContents;
+                die;
+                $this->readability->parse($rawContents);
+                $readable = (string) $this->readability;
+
+                echo $readable;
+                die;
+            }
+
+            $doc = $result->getFeed();
 
             dd($doc);
         }
-        
 //        dump($feeds);
 
     }

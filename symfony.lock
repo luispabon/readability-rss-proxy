@@ -1,12 +1,48 @@
 {
+    "csa/guzzle-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "37c8c8a6c9b4365529a27975dced0589fea4bb48"
+        },
+        "files": [
+            "config/packages/csa_guzzle.yaml"
+        ]
+    },
+    "csa/guzzle-cache-middleware": {
+        "version": "v1.0.0"
+    },
+    "csa/guzzle-history-middleware": {
+        "version": "v1.0.0"
+    },
+    "csa/guzzle-stopwatch-middleware": {
+        "version": "v1.0.0"
+    },
+    "guzzlehttp/guzzle": {
+        "version": "6.3.3"
+    },
+    "guzzlehttp/promises": {
+        "version": "v1.3.1"
+    },
+    "guzzlehttp/psr7": {
+        "version": "1.6.1"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
     "psr/container": {
         "version": "1.0.0"
     },
+    "psr/http-message": {
+        "version": "1.0.1"
+    },
     "psr/log": {
         "version": "1.1.0"
+    },
+    "ralouphie/getallheaders": {
+        "version": "3.0.3"
     },
     "symfony/cache": {
         "version": "v4.3.4"
@@ -121,10 +157,16 @@
     "symfony/service-contracts": {
         "version": "v1.1.6"
     },
+    "symfony/stopwatch": {
+        "version": "v4.3.4"
+    },
     "symfony/var-exporter": {
         "version": "v4.3.4"
     },
     "symfony/yaml": {
         "version": "v4.3.4"
+    },
+    "twig/twig": {
+        "version": "v2.11.3"
     }
 }

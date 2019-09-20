@@ -19,6 +19,12 @@ class FeedItemRepository extends ServiceEntityRepository
         parent::__construct($registry, FeedItem::class);
     }
 
+    public function save(FeedItem $feedItem): void
+    {
+        $this->getEntityManager()->persist($feedItem);
+        $this->getEntityManager()->flush();
+    }
+
     // /**
     //  * @return FeedItem[] Returns an array of FeedItem objects
     //  */

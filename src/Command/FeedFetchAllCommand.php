@@ -3,6 +3,9 @@
 namespace App\Command;
 
 use andreskrey\Readability\Readability;
+use App\Entity\Feed;
+use App\Entity\FeedItem;
+use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
 use FeedIo\FeedIo;
 use GuzzleHttp\Client;
@@ -28,15 +31,21 @@ class FeedFetchAllCommand extends Command
      * @var \GuzzleHttp\Client
      */
     private $guzzle;
+    /**
+     * @var \App\Repository\FeedItemRepository
+     */
+    private $feedItemRepository;
 
     public function __construct(
         FeedIo $feedIo,
         FeedRepository $feedRepository,
+        FeedItemRepository $feedItemRepository,
         Readability $readability,
         Client $guzzle
     ) {
         $this->feedIo = $feedIo;
         $this->feedRepository = $feedRepository;
+        $this->feedItemRepository = $feedItemRepository;
         $this->readability = $readability;
         $this->guzzle = $guzzle;
 
@@ -53,28 +62,50 @@ class FeedFetchAllCommand extends Command
             ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $feeds = $this->feedRepository->findAll();
+        $numFeeds = count($feeds);
 
-        foreach ($feeds as $feed) {
+
+        foreach ($feeds as $key => $feed) {
+            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key+1), $numFeeds, $feed->getUrl()));
             $result = $this->feedIo->read($feed->getUrl());
+            
+            dd($result->getFeed()->getTitle());
+
+            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key+1), $numFeeds, $feed->getUrl()));
+            dd($feed->getFeedItems());
 
 //            dd($result->getFeed());
-            foreach ($result->getFeed() as $feedItem) {
+            foreach ($result->getFeed() as $rawFeedItem) {
 
-                /** @var \FeedIo\Feed\ItemInterface $feedItem */
-                dd($feedItem);
+                /** @var \FeedIo\Feed\ItemInterface $rawFeedItem */
+//                dd($rawFeedItem);
 //                dd($re)
 
-                $rawContents = $this->guzzle->get($feedItem->getLink())->getBody()->getContents();
-                
-                echo $rawContents;
-                die;
-                $this->readability->parse($rawContents);
-                $readable = (string) $this->readability;
+                $rawContents = $this->guzzle->get($rawFeedItem->getLink())->getBody()->getContents();
 
-                echo $readable;
+                $feedItem = $this->feedItemRepository->findOneBy(['link' => $rawFeedItem->getLink()]);
+                if ($feedItem === null) {
+                    dump('make new');
+                    $feedItem = new FeedItem();
+                } else {
+                    dump($feedItem);
+                    dump('use existing');
+                }
+//                dd($feedItem);
+
+                $feedItem
+                    ->setFeed($feed)
+                    ->setTitle($rawFeedItem->getTitle())
+                    ->setDescription($rawContents)
+                    ->setLink($rawFeedItem->getLink())
+                    ->setLastModified($rawFeedItem->getLastModified());
+
+                $this->feedItemRepository->save($feedItem);
+                
                 die;
             }
 

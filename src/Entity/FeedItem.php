@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FeedItemRepository")
  * @ORM\Table(indexes={@ORM\Index(name="idx_link", columns={"link"})})
@@ -35,6 +36,14 @@ class FeedItem
      * @ORM\Column(type="datetimetz")
      */
     private $lastModified;
+
+    /**
+     * @var Feed
+     *
+     * @ORM\ManyToOne(targetEntity="Feed", inversedBy="feedItems")
+     * @ORM\JoinColumn(name="feed_id", referencedColumnName="id", nullable=false)
+     */
+    private $feed;
 
     public function getId(): ?int
     {
@@ -85,6 +94,18 @@ class FeedItem
     public function setLastModified(\DateTimeInterface $lastModified): self
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function getFeed(): Feed
+    {
+        return $this->feed;
+    }
+
+    public function setFeed(Feed $feed): self
+    {
+        $this->feed = $feed;
 
         return $this;
     }

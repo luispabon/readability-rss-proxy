@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FeedItemRepository")
+ * @ORM\Table(indexes={@ORM\Index(name="idx_link", columns={"link"})})
  */
 class FeedItem
 {

@@ -71,12 +71,15 @@ class FeedFetchAllCommand extends Command
 
         foreach ($feeds as $key => $feed) {
             $output->writeln(sprintf('Processing feed %s of %s: %s', ($key + 1), $numFeeds, $feed->getFeedUrl()));
+
+            /** @var \FeedIo\Feed|\FeedIo\FeedInterface $feedContents */
             $feedContents = $this->feedIo->read($feed->getFeedUrl())->getFeed();
 
             // Update feed info
             $feed
                 ->setTitle($feedContents->getTitle())
-                ->setDescription($feedContents->getDescription());
+                ->setDescription($feedContents->getDescription())
+                ->setIcon($this->getSiteFaviconUrl($feedContents));
 
             $this->feedRepository->save($feed);
 
@@ -147,15 +150,44 @@ class FeedFetchAllCommand extends Command
             $feedItem
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
-                ->setDescription($rawContents)
+                ->setDescription($this->getReadableContent($rawContents))
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified());
-
+            
             $this->feedItemRepository->save($feedItem);
 
             $counter++;
         }
 
         $output->writeln('Batch finalised.');
+    }
+
+    /**
+     * Tries to work out the feed's icon.
+     */
+    private function getSiteFaviconUrl(\FeedIo\Feed $feed): ?string
+    {
+        foreach ($feed->getAllElements() as $element) {
+            /** @var \FeedIo\Feed\Node\Element $element */
+            if ($element->getName() === 'image') {
+                foreach ($element->getAllElements() as $subElement) {
+                    /** @var \FeedIo\Feed\Node\Element $subElement */
+                    if ($subElement->getName() === 'url') {
+                        return $subElement->getValue();
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private function getReadableContent(string $rawContent): string
+    {
+        if ($this->readability->parse($rawContent) === true) {
+            return $this->readability->getContent();
+        }
+
+        return $rawContent;
     }
 }

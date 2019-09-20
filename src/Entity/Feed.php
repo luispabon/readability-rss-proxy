@@ -46,6 +46,11 @@ class Feed
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $icon;
+
     public function __construct()
     {
         $this->feedItems = new ArrayCollection();
@@ -121,6 +126,18 @@ class Feed
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getIcon(): ?string
+    {
+        return $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = $icon;
 
         return $this;
     }

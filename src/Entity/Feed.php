@@ -19,6 +19,8 @@ class Feed
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(type="text")
      */
     private $feedUrl;
@@ -31,11 +33,15 @@ class Feed
     private $feedItems;
 
     /**
+     * @var string|null
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $title;
 
     /**
+     * @var string|null
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
@@ -70,7 +76,7 @@ class Feed
     public function addFeedItem(FeedItem $feedItem): self
     {
         $this->feedItems[] = $feedItem;
-        $feedItem->setPost($this);
+        $feedItem->setFeed($this);
 
         return $this;
     }
@@ -100,7 +106,7 @@ class Feed
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(?string $title): self
     {
         $this->title = $title;
 

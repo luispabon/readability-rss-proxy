@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use andreskrey\Readability\Readability;
-use App\Entity\Feed;
 use App\Entity\FeedItem;
 use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
@@ -43,11 +42,11 @@ class FeedFetchAllCommand extends Command
         Readability $readability,
         Client $guzzle
     ) {
-        $this->feedIo = $feedIo;
-        $this->feedRepository = $feedRepository;
+        $this->feedIo             = $feedIo;
+        $this->feedRepository     = $feedRepository;
         $this->feedItemRepository = $feedItemRepository;
-        $this->readability = $readability;
-        $this->guzzle = $guzzle;
+        $this->readability        = $readability;
+        $this->guzzle             = $guzzle;
 
         parent::__construct();
     }
@@ -62,40 +61,40 @@ class FeedFetchAllCommand extends Command
             ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $feeds = $this->feedRepository->findAll();
+        $feeds    = $this->feedRepository->findAll();
         $numFeeds = count($feeds);
 
-
         foreach ($feeds as $key => $feed) {
-            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key+1), $numFeeds, $feed->getUrl()));
-            $result = $this->feedIo->read($feed->getUrl());
-            
-            dd($result->getFeed()->getTitle());
+            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key + 1), $numFeeds, $feed->getFeedUrl()));
+            $feedContents = $this->feedIo->read($feed->getFeedUrl())->getFeed();
 
-            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key+1), $numFeeds, $feed->getUrl()));
-            dd($feed->getFeedItems());
+            // Update feed info
+            $feed
+                ->setTitle($feedContents->getTitle())
+                ->setDescription($feedContents->getDescription());
 
-//            dd($result->getFeed());
-            foreach ($result->getFeed() as $rawFeedItem) {
+            $this->feedRepository->save($feed);
 
+            $numItems = count($feedContents);
+            $output->writeln(sprintf('Found %s feed items', $numItems));
+
+            foreach ($feedContents as $feedItemKey => $rawFeedItem) {
                 /** @var \FeedIo\Feed\ItemInterface $rawFeedItem */
-//                dd($rawFeedItem);
-//                dd($re)
+                $output->writeln(sprintf(
+                    'Processing %s of %s: %s',
+                    ($feedItemKey + 1),
+                    $numItems,
+                    $rawFeedItem->getTitle()
+                ));
 
                 $rawContents = $this->guzzle->get($rawFeedItem->getLink())->getBody()->getContents();
 
                 $feedItem = $this->feedItemRepository->findOneBy(['link' => $rawFeedItem->getLink()]);
                 if ($feedItem === null) {
-                    dump('make new');
                     $feedItem = new FeedItem();
-                } else {
-                    dump($feedItem);
-                    dump('use existing');
                 }
-//                dd($feedItem);
 
                 $feedItem
                     ->setFeed($feed)
@@ -105,15 +104,9 @@ class FeedFetchAllCommand extends Command
                     ->setLastModified($rawFeedItem->getLastModified());
 
                 $this->feedItemRepository->save($feedItem);
-                
-                die;
             }
-
-            $doc = $result->getFeed();
-
-            dd($doc);
         }
-//        dump($feeds);
 
+        $output->writeln('Finished.');
     }
 }

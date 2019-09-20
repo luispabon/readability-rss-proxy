@@ -20,6 +20,22 @@
     "csa/guzzle-stopwatch-middleware": {
         "version": "v1.0.0"
     },
+    "debril/feed-io": {
+        "version": "v4.3.9"
+    },
+    "debril/rss-atom-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "2c23ed747eda9f4c13f5e7eb55fffa1091fdd505"
+        },
+        "files": [
+            "config/packages/rss_atom.yaml",
+            "config/routes/rss_atom.yaml"
+        ]
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {

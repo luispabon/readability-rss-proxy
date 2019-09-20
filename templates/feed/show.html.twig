@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Feed</h1>
 
-    <table class="table">
+    <table class="table ui">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -30,9 +30,15 @@
         </tbody>
     </table>
 
-    <a href="{{ path('feed_index') }}">back to list</a>
+    <button class="ui labeled icon button">
+        <i class="left arrow icon"></i>
+        <a href="{{ path('feed_index') }}">Back to list</a>
+    </button>
 
-    <a href="{{ path('feed_edit', {'id': feed.id}) }}">edit</a>
+    <button class="ui right labeled green icon button">
+        <i class="edit icon primary"></i>
+        <a href="{{ path('feed_edit', {'id': feed.id}) }}">Edit</a>
+    </button>
 
     {{ include('feed/_delete_form.html.twig') }}
 {% endblock %}

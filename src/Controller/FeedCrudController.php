@@ -11,9 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/feed")
+ * @Route("/admin/feed")
  */
-class FeedController extends AbstractController
+class FeedCrudController extends AbstractController
 {
     /**
      * @Route("/", name="feed_index", methods={"GET"})

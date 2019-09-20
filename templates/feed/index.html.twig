@@ -5,7 +5,7 @@
 {% block body %}
     <h1>Feed index</h1>
 
-    <table class="table">
+    <table class="table ui">
         <thead>
             <tr>
                 <th>Id</th>
@@ -25,8 +25,8 @@
                 <td>{{ feed.description }}</td>
                 <td>{{ feed.icon }}</td>
                 <td>
-                    <a href="{{ path('feed_show', {'id': feed.id}) }}">show</a>
-                    <a href="{{ path('feed_edit', {'id': feed.id}) }}">edit</a>
+                    <a href="{{ path('feed_show', {'id': feed.id}) }}" class="ui button">show</a>
+                    <a href="{{ path('feed_edit', {'id': feed.id}) }}" class="ui primary button">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -37,5 +37,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('feed_new') }}">Create new</a>
+    <a href="{{ path('feed_new') }}" class="ui primary button">Create new</a>
 {% endblock %}

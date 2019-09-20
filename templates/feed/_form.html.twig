@@ -1,4 +1,23 @@
-{{ form_start(form) }}
+{{ form_start(form, {'attr': {'class': 'ui form'}}) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+<div class="ui grid">
+    <div class="row">
+        {{ form_widget(form) }}
+    </div>
+    <div class="two column row">
+        <div class="left floated column">
+            <button class="ui labeled icon button">
+                <i class="left arrow icon"></i>
+                <a href="{{ path('feed_index') }}">Back to list</a>
+            </button>
+        </div>
+
+        <div class="right floated column right aligned">
+            <button class="btn ui primary button">{{ button_label|default('Save') }}</button>
+        </div>
+    </div>
+</div>
+
+
 {{ form_end(form) }}

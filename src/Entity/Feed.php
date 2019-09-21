@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +30,7 @@ class Feed
      * @var FeedItem[]|ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="FeedItem", mappedBy="feed", cascade={"all"})
+     * @ORM\OrderBy({"lastModified" = "DESC"})
      */
     private $feedItems;
 
@@ -47,9 +49,16 @@ class Feed
     private $description;
 
     /**
+     * @var DateTimeInterface|null
+     *
      * @ORM\Column(type="text", nullable=true)
      */
     private $icon;
+
+    /**
+     * @ORM\Column(type="datetimetz", nullable=true)
+     */
+    private $lastModified;
 
     public function __construct()
     {
@@ -138,6 +147,18 @@ class Feed
     public function setIcon(?string $icon): self
     {
         $this->icon = $icon;
+
+        return $this;
+    }
+
+    public function getLastModified(): ?DateTimeInterface
+    {
+        return $this->lastModified;
+    }
+
+    public function setLastModified(?DateTimeInterface $lastModified): self
+    {
+        $this->lastModified = $lastModified;
 
         return $this;
     }

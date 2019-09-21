@@ -46,7 +46,12 @@ class FeedProxyController
 
         $formattedFeed = (new Feed())
             ->setTitle($feed->getTitle())
-            ->setDescription($feed->getDescription());
+            ->setDescription($feed->getDescription())
+            ->setLastModified($feed->getLastModified())
+            ->setPublicId($this->removeQueryFromUrl($feed->getFeedUrl()))
+            ->setLink($feed->getFeedUrl());
+
+        dump($formattedFeed);
 
         foreach ($feed->getFeedItems() as $feedItem) {
             $formattedItem = (new Item())
@@ -54,15 +59,20 @@ class FeedProxyController
                 ->setDescription($feedItem->getDescription())
                 ->setLastModified($feedItem->getLastModified())
                 ->setLink($feedItem->getLink())
-                ->setPublicId($feedItem->getLink());
-            
+                ->setPublicId($this->removeQueryFromUrl($feedItem->getLink()));
+
             $formattedFeed->add($formattedItem);
         }
 
         $atomResponse = $this->feedIo->getPsrResponse($formattedFeed, 'atom');
 
-        dd($atomResponse);
-
         return $this->psrConverter->createResponse($atomResponse);
+    }
+
+    private function removeQueryFromUrl(string $url): string
+    {
+        $parsed = parse_url($url);
+
+        return sprintf('%s://%s%s', $parsed['scheme'], $parsed['host'], $parsed['path'] ?? '');
     }
 }

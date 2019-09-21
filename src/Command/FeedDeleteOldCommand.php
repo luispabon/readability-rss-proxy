@@ -9,12 +9,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * Command to delete old feed items.
+ */
 class FeedDeleteOldCommand extends Command
 {
     protected static $defaultName = 'feed:delete-old';
-    /**
-     * @var FeedItemRepository
-     */
+
+    /** @var FeedItemRepository */
     private $feedItemRepository;
 
     public function __construct(FeedItemRepository $feedItemRepository)
@@ -52,5 +54,7 @@ class FeedDeleteOldCommand extends Command
         $numDeleted = $this->feedItemRepository->deleteOlderThan($date);
 
         $io->success(sprintf('Correctly removed %s feed items', $numDeleted));
+
+        return 0;
     }
 }

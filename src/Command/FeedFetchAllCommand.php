@@ -23,6 +23,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface as CommandOutput;
 use function GuzzleHttp\Promise\settle;
 
+/**
+ * Command to sync all available feeds.
+ *
+ * Each feed item is persisted into our data store, with a twist: we overwrite whatever small description the feed
+ * comes from with the actual content of the page the feed item links to, run through a Readability analog.
+ *
+ * So any app or whatever that downloads the feed automagically gets a pseudo offline mode.
+ */
 class FeedFetchAllCommand extends Command
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
@@ -69,6 +77,9 @@ class FeedFetchAllCommand extends Command
             ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description');
     }
 
+    /**
+     * The meat of the matter. Feeds are fetched sequentially, and items are fetched asynchronously in batches.
+     */
     protected function execute(InputInterface $input, CommandOutput $output)
     {
         $feeds    = $this->feedRepository->findAll();
@@ -77,7 +88,8 @@ class FeedFetchAllCommand extends Command
         foreach ($feeds as $key => $feed) {
             /** @var FeedIoFeed|FeedInterface $feedContents */
 
-            $output->writeln(sprintf('<fg=yellow;options=bold>Processing feed %s of %s: %s</>', ($key + 1), $numFeeds, $feed->getFeedUrl()));
+            $output->writeln(sprintf('<fg=yellow;options=bold>Processing feed %s of %s: %s</>', ($key + 1), $numFeeds,
+                $feed->getFeedUrl()));
 
             // Take a couple of hours from last modified to fetch feeds from to have some overlap
             $updateFrom = $feed->getLastModified() instanceof DateTime ? clone $feed->getLastModified() : null;

@@ -7,9 +7,11 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * Unfortunately we can't call this User as it's a reserved word in Postgres and breaks doctrine fixtures.
+ *
+ * @ORM\Entity(repositoryClass="App\Repository\RssUserRepository")
  */
-class User implements UserInterface
+class RssUser implements UserInterface
 {
     /**
      * @ORM\Id()

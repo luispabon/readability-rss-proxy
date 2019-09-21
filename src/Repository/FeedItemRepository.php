@@ -24,4 +24,22 @@ class FeedItemRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($feedItem);
         $this->getEntityManager()->flush();
     }
+
+    /**
+     * Deletes all items older than the given date.
+     *
+     * @param \DateTime $date Date to delete from
+     *
+     * @return int Number of items deleted
+     */
+    public function deleteOlderThan(\DateTime $date): int
+    {
+        $queryBuilder = $this->createQueryBuilder('fi');
+        $queryBuilder
+            ->delete()
+            ->where('fi.lastModified < :date')
+            ->setParameter(':date', $date->format(DATE_ATOM));
+
+        return $queryBuilder->getQuery()->execute();
+    }
 }

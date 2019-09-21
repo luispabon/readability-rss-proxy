@@ -10,6 +10,7 @@ use App\Repository\FeedRepository;
 use DateTime;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
+use FeedIo\Feed\Node\Element as NodeElement;
 use FeedIo\FeedInterface;
 use FeedIo\FeedIo;
 use GuzzleHttp\Client;
@@ -25,6 +26,7 @@ use function GuzzleHttp\Promise\settle;
 class FeedFetchAllCommand extends Command
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
+    private const USER_AGENT_HEADER    = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0';
 
     /** @var FeedIo */
     private $feedIo;
@@ -73,16 +75,28 @@ class FeedFetchAllCommand extends Command
         $numFeeds = count($feeds);
 
         foreach ($feeds as $key => $feed) {
-            $output->writeln(sprintf('Processing feed %s of %s: %s', ($key + 1), $numFeeds, $feed->getFeedUrl()));
-
             /** @var FeedIoFeed|FeedInterface $feedContents */
-            $feedContents = $this->feedIo->read($feed->getFeedUrl())->getFeed();
+
+            $output->writeln(sprintf('<fg=yellow;options=bold>Processing feed %s of %s: %s</>', ($key + 1), $numFeeds, $feed->getFeedUrl()));
+
+            // Take a couple of hours from last modified to fetch feeds from to have some overlap
+            $updateFrom = $feed->getLastModified() instanceof DateTime ? clone $feed->getLastModified() : null;
+            if ($updateFrom instanceof DateTime) {
+                $updateFrom->sub(new \DateInterval('PT2H'));
+            }
+
+            $feedContents = $this->feedIo->read($feed->getFeedUrl(), null, $updateFrom)->getFeed();
+
+            // Last modified can come sometimes as the epoch - correct that shit
+            $lastMod = $feedContents
+                ->getLastModified()
+                ->getTimestamp() <= 0 ? new DateTime() : $feedContents->getLastModified();
 
             // Update feed info
             $feed
                 ->setTitle($feedContents->getTitle())
                 ->setDescription($feedContents->getDescription())
-                ->setLastModified($feedContents->getLastModified())
+                ->setLastModified($lastMod)
                 ->setIcon($this->getSiteFaviconUrl($feedContents));
 
             $this->feedRepository->save($feed);
@@ -110,7 +124,15 @@ class FeedFetchAllCommand extends Command
                     $rawFeedItem->getTitle()
                 ));
 
-                $promises[$rawFeedItem->getLink()]     = $this->guzzle->getAsync($rawFeedItem->getLink());
+                // Some sites are hostile to weird user agents, so use firefox's
+                $promises[$rawFeedItem->getLink()] = $this->guzzle->getAsync($rawFeedItem->getLink(), [
+                        'headers' => [
+                            'User-Agent' => self::USER_AGENT_HEADER,
+                            'Accept'     => 'text/html',
+                        ],
+                    ]
+                );
+
                 $rawFeedItems[$rawFeedItem->getLink()] = $rawFeedItem;
 
                 if (($currentItemNumber % self::FEED_ITEM_BATCH_SIZE === 0) || $currentItemNumber === $numItems) {
@@ -150,10 +172,11 @@ class FeedFetchAllCommand extends Command
             // We might have been throttled or something. We'll catch ya next time
             if (array_key_exists('value', $promiseResult) === false) {
                 $output->writeln(sprintf(
-                    'Could not acquire %s [%s]',
+                    '<error>Could not acquire %s [%s]</error>',
                     $rawFeedItem->getTitle(),
                     $rawFeedItem->getLink()
                 ));
+                dump($promiseResult);
                 continue;
             }
 
@@ -185,10 +208,10 @@ class FeedFetchAllCommand extends Command
     private function getSiteFaviconUrl(FeedIoFeed $feed): ?string
     {
         foreach ($feed->getAllElements() as $element) {
-            /** @var \FeedIo\Feed\Node\Element $element */
+            /** @var NodeElement $element */
             if ($element->getName() === 'image') {
                 foreach ($element->getAllElements() as $subElement) {
-                    /** @var \FeedIo\Feed\Node\Element $subElement */
+                    /** @var NodeElement $subElement */
                     if ($subElement->getName() === 'url') {
                         return $subElement->getValue();
                     }

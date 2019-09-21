@@ -7,7 +7,10 @@ use App\Entity\Feed;
 use App\Entity\FeedItem;
 use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
+use DateTime;
+use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
+use FeedIo\FeedInterface;
 use FeedIo\FeedIo;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
@@ -21,21 +24,21 @@ use function GuzzleHttp\Promise\settle;
 
 class FeedFetchAllCommand extends Command
 {
-    private const FEED_ITEM_BATCH_SIZE = 20;
+    private const FEED_ITEM_BATCH_SIZE = 5;
 
-    /** @var \FeedIo\FeedIo */
+    /** @var FeedIo */
     private $feedIo;
 
-    /** @var \App\Repository\FeedRepository */
+    /** @var FeedRepository */
     private $feedRepository;
 
-    /** @var \andreskrey\Readability\Readability */
+    /** @var Readability */
     private $readability;
 
-    /** @var \GuzzleHttp\Client */
+    /** @var Client */
     private $guzzle;
 
-    /** @var \App\Repository\FeedItemRepository */
+    /** @var FeedItemRepository */
     private $feedItemRepository;
 
     public function __construct(
@@ -72,7 +75,7 @@ class FeedFetchAllCommand extends Command
         foreach ($feeds as $key => $feed) {
             $output->writeln(sprintf('Processing feed %s of %s: %s', ($key + 1), $numFeeds, $feed->getFeedUrl()));
 
-            /** @var \FeedIo\Feed|\FeedIo\FeedInterface $feedContents */
+            /** @var FeedIoFeed|FeedInterface $feedContents */
             $feedContents = $this->feedIo->read($feed->getFeedUrl())->getFeed();
 
             // Update feed info
@@ -93,6 +96,12 @@ class FeedFetchAllCommand extends Command
                 $currentItemNumber = $feedItemKey + 1;
 
                 /** @var RawFeedItem $rawFeedItem */
+
+                if ($this->feedItemRepository->findOneBy(['link' => $rawFeedItem->getLink()]) !== null) {
+                    $output->writeln(sprintf('Skipping %s', $rawFeedItem->getTitle()));
+                    continue;
+                }
+
                 $output->writeln(sprintf(
                     'Acquiring %s of %s: %s',
                     $currentItemNumber,
@@ -137,23 +146,30 @@ class FeedFetchAllCommand extends Command
 
             $output->writeln(sprintf('Processing %s of %s: %s', $counter, $numRawFeedItems, $rawFeedItem->getTitle()));
 
+            // We might have been throttled or something. We'll catch ya next time
+            if (array_key_exists('value', $promiseResult) === false) {
+                $output->writeln(sprintf(
+                    'Could not acquire %s [%s]',
+                    $rawFeedItem->getTitle(),
+                    $rawFeedItem->getLink()
+                ));
+                continue;
+            }
+
             /** @var ResponseInterface $response */
             $response = $promiseResult['value'];
 
             $rawContents = $response->getBody()->getContents();
 
-            $feedItem = $this->feedItemRepository->findOneBy(['link' => $rawFeedItem->getLink()]);
-            if ($feedItem === null) {
-                $feedItem = new FeedItem();
-            }
-
-            $feedItem
+            // We're depending on this item not to exist already
+            $feedItem = (new FeedItem())
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
                 ->setDescription($this->getReadableContent($rawContents))
                 ->setLink($rawFeedItem->getLink())
-                ->setLastModified($rawFeedItem->getLastModified());
-            
+                ->setLastModified($rawFeedItem->getLastModified())
+                ->setCreatedAt(new DateTime());
+
             $this->feedItemRepository->save($feedItem);
 
             $counter++;
@@ -165,7 +181,7 @@ class FeedFetchAllCommand extends Command
     /**
      * Tries to work out the feed's icon.
      */
-    private function getSiteFaviconUrl(\FeedIo\Feed $feed): ?string
+    private function getSiteFaviconUrl(FeedIoFeed $feed): ?string
     {
         foreach ($feed->getAllElements() as $element) {
             /** @var \FeedIo\Feed\Node\Element $element */

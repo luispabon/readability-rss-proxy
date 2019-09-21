@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -91,12 +93,12 @@ class FeedItem
         return $this;
     }
 
-    public function getLastModified(): ?\DateTimeInterface
+    public function getLastModified(): ?DateTimeInterface
     {
         return $this->lastModified;
     }
 
-    public function setLastModified(\DateTimeInterface $lastModified): self
+    public function setLastModified(DateTimeInterface $lastModified): self
     {
         $this->lastModified = $lastModified;
 
@@ -115,12 +117,12 @@ class FeedItem
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

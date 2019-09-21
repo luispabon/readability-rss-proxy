@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
@@ -50,8 +51,6 @@ class FeedProxyController
             ->setLastModified($feed->getLastModified())
             ->setPublicId($this->removeQueryFromUrl($feed->getFeedUrl()))
             ->setLink($feed->getFeedUrl());
-
-        dump($formattedFeed);
 
         foreach ($feed->getFeedItems() as $feedItem) {
             $formattedItem = (new Item())

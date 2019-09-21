@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Repository;
 
 use App\Entity\FeedItem;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -28,11 +30,11 @@ class FeedItemRepository extends ServiceEntityRepository
     /**
      * Deletes all items older than the given date.
      *
-     * @param \DateTime $date Date to delete from
+     * @param DateTime $date Date to delete from
      *
      * @return int Number of items deleted
      */
-    public function deleteOlderThan(\DateTime $date): int
+    public function deleteOlderThan(DateTime $date): int
     {
         $queryBuilder = $this->createQueryBuilder('fi');
         $queryBuilder

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Command;
 
@@ -7,6 +8,7 @@ use App\Entity\Feed;
 use App\Entity\FeedItem;
 use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
+use DateInterval;
 use DateTime;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
@@ -94,7 +96,7 @@ class FeedFetchAllCommand extends Command
             // Take a couple of hours from last modified to fetch feeds from to have some overlap
             $updateFrom = $feed->getLastModified() instanceof DateTime ? clone $feed->getLastModified() : null;
             if ($updateFrom instanceof DateTime) {
-                $updateFrom->sub(new \DateInterval('PT2H'));
+                $updateFrom->sub(new DateInterval('PT2H'));
             }
 
             $feedContents = $this->feedIo->read($feed->getFeedUrl(), null, $updateFrom)->getFeed();

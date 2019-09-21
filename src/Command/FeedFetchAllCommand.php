@@ -82,6 +82,7 @@ class FeedFetchAllCommand extends Command
             $feed
                 ->setTitle($feedContents->getTitle())
                 ->setDescription($feedContents->getDescription())
+//                $feedContents->getLastModified()
                 ->setIcon($this->getSiteFaviconUrl($feedContents));
 
             $this->feedRepository->save($feed);

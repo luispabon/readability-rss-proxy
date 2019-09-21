@@ -344,6 +344,9 @@
     "symfony/property-access": {
         "version": "v4.3.4"
     },
+    "symfony/psr-http-message-bridge": {
+        "version": "v1.2.0"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {

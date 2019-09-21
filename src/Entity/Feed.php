@@ -26,9 +26,9 @@ class Feed
     private $feedUrl;
 
     /**
-     * @var \App\Entity\FeedItem[]|ArrayCollection
+     * @var FeedItem[]|ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="FeedItem", mappedBy="Feed", cascade={"all"})
+     * @ORM\OneToMany(targetEntity="FeedItem", mappedBy="feed", cascade={"all"})
      */
     private $feedItems;
 
@@ -99,7 +99,7 @@ class Feed
     }
 
     /**
-     * @return Collection
+     * @return Collection|FeedItem[]
      */
     public function getFeedItems(): Collection
     {

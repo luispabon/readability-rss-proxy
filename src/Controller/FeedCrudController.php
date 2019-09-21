@@ -21,7 +21,7 @@ class FeedCrudController extends AbstractController
     public function index(FeedRepository $feedRepository): Response
     {
         return $this->render('feed/index.html.twig', [
-            'feeds' => $feedRepository->findAll(),
+            'feeds' => $feedRepository->findBy([], ['id' => 'ASC']),
         ]);
     }
 

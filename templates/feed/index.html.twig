@@ -12,6 +12,7 @@
                 <th>FeedUrl</th>
                 <th>Title</th>
                 <th>Description</th>
+                <th>Last modified</th>
                 <th>Icon</th>
                 <th>actions</th>
             </tr>
@@ -23,9 +24,10 @@
                 <td>{{ feed.feedUrl }}</td>
                 <td>{{ feed.title }}</td>
                 <td>{{ feed.description }}</td>
+                <td>{{ feed.lastModified|date("F jS Y \\a\\t g:ia") }}</td>
                 <td>
                     {% if feed.icon %}
-                        <img src="{{ feed.icon }}"/>
+                        <img src="{{ feed.icon }}" height="48" width="48"/>
                     {% endif %}
                 </td>
                 <td>

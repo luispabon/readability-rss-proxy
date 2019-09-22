@@ -9,6 +9,7 @@ use App\Entity\FeedItem;
 use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
 use DateInterval;
+use DateTime;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
 use FeedIo\Feed\Node\Element as NodeElement;
@@ -18,6 +19,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use function GuzzleHttp\Promise\settle;
 
 class Processor
 {
@@ -83,7 +85,7 @@ class Processor
                 ? clone $feed->getLastModified()
                 : null;
 
-            if ($updateFrom instanceof \DateTime) {
+            if ($updateFrom instanceof DateTime) {
                 $updateFrom->sub(new DateInterval('PT2H'));
             }
 

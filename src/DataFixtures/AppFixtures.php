@@ -21,6 +21,7 @@ class AppFixtures extends Fixture
             'https://www.sciencedaily.com/rss/computers_math.xml',
             'https://www.universetoday.com/feed/',
             'https://www.phoronix.com/rss.php',
+            'http://www.bungie.net/News/NewsRss.ashx',
         ];
 
         foreach ($feeds as $feed) {

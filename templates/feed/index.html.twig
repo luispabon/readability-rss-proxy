@@ -21,18 +21,24 @@
         {% for feed in feeds %}
             <tr>
                 <td>{{ feed.id }}</td>
-                <td>{{ feed.feedUrl }}</td>
+                <td><a href="{{ feed.feedUrl }}">{{ feed.feedUrl }}</a></td>
                 <td>{{ feed.title }}</td>
-                <td>{{ feed.description }}</td>
-                <td>{{ feed.lastModified|date("F jS Y \\a\\t g:ia") }}</td>
+                <td>{{ feed.description|truncate(20) }}</td>
+                <td>{{ feed.lastModified|date("d-m-Y H:i \T") }}</td>
                 <td>
                     {% if feed.icon %}
                         <img src="{{ feed.icon }}" height="48" width="48"/>
                     {% endif %}
                 </td>
-                <td>
-                    <a href="{{ path('feed_display', {'id': feed.id}) }}" class="ui button">show</a>
-                    <a href="{{ path('feed_edit', {'id': feed.id}) }}" class="ui primary button">edit</a>
+                <td style="width: 20em">
+                    <button class="ui right labeled icon button">
+                        <i class="rss icon"></i>
+                        <a href="{{ path('feed_display', {'id': feed.id}) }}">RSS</a>
+                    </button>
+                    <button class="ui right labeled icon button">
+                        <i class="edit icon"></i>
+                        <a href="{{ path('feed_edit', {'id': feed.id}) }}">edit</a>
+                    </button>
                 </td>
             </tr>
         {% else %}

@@ -43,17 +43,14 @@ class RssUserController extends AbstractController
     public function new(Request $request): Response
     {
         $user = new RssUser();
+        $user->setPassword('');
+
         $form = $this->createForm(RssUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
-
-            $rawPassword = $user->getPassword();
-
-            $user->setPassword($this->passwordEncoder->encodePassword($user, $rawPassword));
-
-            $entityManager->persist($user);
+            $entityManager->persist($this->encodePassword($user));
             $entityManager->flush();
 
             return $this->redirectToRoute('user_index');
@@ -84,7 +81,10 @@ class RssUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $entityManager->persist($this->encodePassword($user));
+            $entityManager->flush();
 
             return $this->redirectToRoute('user_index');
         }
@@ -107,5 +107,17 @@ class RssUserController extends AbstractController
         }
 
         return $this->redirectToRoute('user_index');
+    }
+
+    /**
+     * Given a user entity, encode its password with the system encoder and return.
+     */
+    private function encodePassword(RssUser $user): RssUser
+    {
+        $rawPassword = $user->getPassword();
+
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $rawPassword));
+
+        return $user;
     }
 }

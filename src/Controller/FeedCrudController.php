@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Feed;
+use App\Feed\Processor as FeedProcessor;
 use App\Form\FeedType;
 use App\Repository\FeedRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FeedCrudController extends AbstractController
 {
+    /**
+     * @var FeedProcessor
+     */
+    private $feedProcessor;
+
+    public function __construct(FeedProcessor $feedProcessor)
+    {
+        $this->feedProcessor = $feedProcessor;
+    }
+
     /**
      * @Route("/", name="feed_index", methods={"GET"})
      */
@@ -39,6 +50,13 @@ class FeedCrudController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($feed);
             $entityManager->flush();
+
+            // Fetch feed, but fail gracefully
+            try {
+                $this->feedProcessor->fetchFeeds([$feed], true);
+            } catch (\Throwable $exception) {
+                // Do nothing
+            }
 
             return $this->redirectToRoute('feed_index');
         }
@@ -84,7 +102,7 @@ class FeedCrudController extends AbstractController
      */
     public function delete(Request $request, Feed $feed): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$feed->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $feed->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($feed);
             $entityManager->flush();

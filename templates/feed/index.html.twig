@@ -14,7 +14,7 @@
             <th>Description</th>
             <th>Last modified</th>
             <th>Icon</th>
-            <th>actions</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -53,5 +53,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('feed_new') }}" class="ui primary button">Create new</a>
+    <a href="{{ path('feed_new') }}">
+        <button class="ui right labeled icon primary button">
+            <i class="plus icon"></i>
+            Add new feed
+        </button>
+    </a>
 {% endblock %}

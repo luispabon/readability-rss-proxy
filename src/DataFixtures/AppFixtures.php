@@ -4,13 +4,33 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Entity\Feed;
+use App\Entity\RssUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
     public function load(ObjectManager $manager)
     {
+        $user = new RssUser();
+        $user
+            ->setEmail('admin@admin.com')
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'admin'));
+
+        $manager->persist($user);
+
         $feeds = [
             'http://feeds.arstechnica.com/arstechnica/index',
             'http://rss.slashdot.org/Slashdot/slashdotMainatom',

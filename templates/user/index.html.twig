@@ -27,10 +27,12 @@
                     </ul>
                 </td>
                 <td style="width: 5em">
-                    <button class="ui right labeled icon button">
-                        <i class="edit icon"></i>
-                        <a href="{{ path('user_edit', {'id': user.id}) }}" class="">edit</a>
-                    </button>
+                    <a href="{{ path('user_edit', {'id': user.id}) }}" class="">
+                        <button class="ui right labeled icon button">
+                            <i class="edit icon"></i>
+                            Edit
+                        </button>
+                    </a>
                 </td>
             </tr>
         {% else %}

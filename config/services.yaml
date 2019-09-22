@@ -28,5 +28,10 @@ services:
     Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
         class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
 
+#    App\Form\RssUserType:
+#        arguments:
+#            - '%security.role_hierarchy.roles%'
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

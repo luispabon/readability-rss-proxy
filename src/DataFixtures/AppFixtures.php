@@ -45,7 +45,10 @@ class AppFixtures extends Fixture
         ];
 
         foreach ($feeds as $feed) {
-            $manager->persist((new Feed())->setFeedUrl($feed));
+            $manager->persist((new Feed())
+                ->setFeedUrl($feed)
+                ->setRssUser($user)
+            );
         }
 
         $manager->flush();

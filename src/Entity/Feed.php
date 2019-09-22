@@ -61,6 +61,12 @@ class Feed
      */
     private $lastModified;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RssUser", inversedBy="feeds")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rssUser;
+
     public function __construct()
     {
         $this->feedItems = new ArrayCollection();
@@ -160,6 +166,18 @@ class Feed
     public function setLastModified(?DateTimeInterface $lastModified): self
     {
         $this->lastModified = $lastModified;
+
+        return $this;
+    }
+
+    public function getRssUser(): ?RssUser
+    {
+        return $this->rssUser;
+    }
+
+    public function setRssUser(?RssUser $rssUser): self
+    {
+        $this->rssUser = $rssUser;
 
         return $this;
     }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -35,6 +37,16 @@ class RssUser implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="rssUser", orphanRemoval=true)
+     */
+    private $feeds;
+
+    public function __construct()
+    {
+        $this->feeds = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -112,5 +124,36 @@ class RssUser implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|Feed[]
+     */
+    public function getFeeds(): Collection
+    {
+        return $this->feeds;
+    }
+
+    public function addFeed(Feed $feed): self
+    {
+        if (!$this->feeds->contains($feed)) {
+            $this->feeds[] = $feed;
+            $feed->setRssUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFeed(Feed $feed): self
+    {
+        if ($this->feeds->contains($feed)) {
+            $this->feeds->removeElement($feed);
+            // set the owning side to null (unless already changed)
+            if ($feed->getRssUser() === $this) {
+                $feed->setRssUser(null);
+            }
+        }
+
+        return $this;
     }
 }

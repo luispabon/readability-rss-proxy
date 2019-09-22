@@ -7,15 +7,15 @@
 
     <table class="table ui">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>FeedUrl</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Last modified</th>
-                <th>Icon</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Id</th>
+            <th>FeedUrl</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Last modified</th>
+            <th>Icon</th>
+            <th>actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for feed in feeds %}
@@ -31,14 +31,18 @@
                     {% endif %}
                 </td>
                 <td style="width: 20em">
-                    <button class="ui right labeled icon orange button">
-                        <i class="rss icon"></i>
-                        <a href="{{ path('feed_display', {'id': feed.id}) }}">RSS</a>
-                    </button>
-                    <button class="ui right labeled icon button">
-                        <i class="edit icon"></i>
-                        <a href="{{ path('feed_edit', {'id': feed.id}) }}">edit</a>
-                    </button>
+                    <a href="{{ path('feed_display', {'id': feed.id}) }}">
+                        <button class="ui right labeled icon orange button">
+                            <i class="rss icon"></i>
+                            RSS
+                        </button>
+                    </a>
+                    <a href="{{ path('feed_edit', {'id': feed.id}) }}">
+                        <button class="ui right labeled icon button">
+                            <i class="edit icon"></i>
+                            Edit
+                        </button>
+                    </a>
                 </td>
             </tr>
         {% else %}

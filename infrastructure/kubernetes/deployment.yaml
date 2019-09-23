@@ -1,0 +1,137 @@
+# See https://github.com/idev4u/concourse-ci-kube
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rss-proxy
+  namespace: sites
+  labels:
+    app: rss-proxy
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: rss-proxy
+
+---
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: rss-proxy
+  namespace: sites
+data:
+  db.host:       "10.98.240.7"
+  redis.host:    "redis-rss-proxy"
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: rss-proxy
+  namespace: sites
+  labels:
+    app: rss-proxy
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: rss-proxy
+    spec:
+      containers:
+        - image: eu.gcr.io/auron-infrastructure/rss-proxy-nginx:latest
+          name: nginx
+
+        - image: eu.gcr.io/auron-infrastructure/rss-proxy-php-fpm:latest
+          name: php-fpm
+
+          env:
+            - name: APP_ENV
+              value: prod
+
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: rss-proxy
+                  key: app.secret
+
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: redis.host
+
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: db.host
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: rss-proxy
+                  key: db.name
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rss-proxy
+                  key: db.user
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rss-proxy
+                  key: db.password
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: rss-proxy
+                  key: db.name
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-rss-proxy
+  namespace: sites
+  labels:
+    app: redis-rss-proxy
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+  selector:
+    app: redis-rss-proxy
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis-rss-proxy
+  namespace: sites
+  labels:
+    app: redis-rss-proxy
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: redis-rss-proxy
+    spec:
+      containers:
+        - image: redis:5-alpine
+          name: redis

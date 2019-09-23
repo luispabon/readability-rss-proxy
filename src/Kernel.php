@@ -52,4 +52,22 @@ class Kernel extends BaseKernel
         $routes->import($confDir.'/{routes}/*'.self::CONFIG_EXTS, '/', 'glob');
         $routes->import($confDir.'/{routes}'.self::CONFIG_EXTS, '/', 'glob');
     }
+
+    public function getCacheDir()
+    {
+        if ($this->getEnvironment() === 'prod') {
+            return '/tmp/site-cache/';
+        }
+
+        return $this->getProjectDir() . '/var/cache/' . $this->environment;
+    }
+
+    public function getLogDir()
+    {
+        if ($this->getEnvironment() === 'prod') {
+            return '/tmp/site-logs/';
+        }
+
+        return $this->getProjectDir() . '/var/log';
+    }
 }

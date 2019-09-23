@@ -23,14 +23,19 @@ ENV APP_ENV=prod
 ENV APP_SECRET=""
 
 ENV DB_HOST="postgres"
+ENV DB_PORT=5432
 ENV DB_NAME="foo"
 ENV DB_USER="user"
 ENV DB_PASSWORD="passwd"
+ENV DB_VERSION=9.6
+ENV DB_DRIVER=pdo_pgsql
+ENV DB_PROTOCOL=pgsql
+ENV DB_CHARSET=UTF8
 
 ENV REDIS_HOST="redis"
 
-COPY bin/console /application/bin/
-COPY composer.*  /application/
+COPY bin/console ./bin/
+COPY composer.*  ./
 
 RUN composer install --no-dev --no-scripts; \
     composer clear-cache
@@ -43,9 +48,10 @@ COPY config           ./config
 COPY public/index.php ./public/
 COPY src              ./src
 COPY templates        ./templates
-COPY translations     ./translations
+COPY .env             ./
 
-RUN composer dump-autoload --optimize --classmap-authoritative; \
+RUN composer dump-env prod; \
+    composer dump-autoload --optimize --classmap-authoritative; \
     bin/console cache:warmup; \
     chown www-data:www-data /tmp/site-cache /tmp/site-logs -Rf
 

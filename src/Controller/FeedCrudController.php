@@ -33,7 +33,8 @@ class FeedCrudController extends AbstractController
     public function index(FeedRepository $feedRepository): Response
     {
         return $this->render('feed/index.html.twig', [
-            'feeds' => $feedRepository->findForUser($this->getUser(), ['id' => 'ASC']),
+            'feeds' => $feedRepository->findForUser($this->getUser()),
+            'user'  => $this->getUser(),
         ]);
     }
 

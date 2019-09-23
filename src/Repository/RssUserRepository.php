@@ -61,4 +61,9 @@ class RssUserRepository extends ServiceEntityRepository
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
+
+    public function findByIdAndOpmlToken(int $id, string $opmlToken): ?RssUser
+    {
+        return $this->findOneBy(['id' => $id, 'opmlToken' => $opmlToken]);
+    }
 }

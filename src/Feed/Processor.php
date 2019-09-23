@@ -116,7 +116,7 @@ class Processor
 
                 /** @var RawFeedItem $rawFeedItem */
 
-                if ($this->feedItemRepository->findOneBy(['link' => $rawFeedItem->getLink()]) !== null) {
+                if ($this->feedItemRepository->haveFeedItem($feed, $rawFeedItem->getLink()) === true) {
                     $this->logger->info(sprintf('Skipping %s', $rawFeedItem->getTitle()));
                     continue;
                 }
@@ -170,8 +170,12 @@ class Processor
             /** @var RawFeedItem $rawFeedItem */
             $rawFeedItem = $rawFeedItems[$link];
 
-            $this->logger->info(sprintf('Processing %s of %s: %s', $counter, $numRawFeedItems,
-                $rawFeedItem->getTitle()));
+            $this->logger->info(sprintf(
+                'Processing %s of %s: %s',
+                $counter,
+                $numRawFeedItems,
+                $rawFeedItem->getTitle()
+            ));
 
             // We might have been throttled or something. We'll catch ya next time
             if (array_key_exists('value', $promiseResult) === false) {

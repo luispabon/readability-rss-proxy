@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Feed;
+use App\Entity\RssUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
@@ -24,5 +25,13 @@ class FeedRepository extends ServiceEntityRepository
     {
         $this->getEntityManager()->persist($feed);
         $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @return array|Feed[]
+     */
+    public function findForUser(RssUser $user, array $sortCriteria): array
+    {
+        return $this->findBy(['rssUser' => $user]);
     }
 }

@@ -20,10 +20,10 @@ security:
                     - App\Security\AppAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+         - { path: ^/admin/feed, roles: ROLE_USER }
          - { path: ^/admin, roles: ROLE_ADMIN }

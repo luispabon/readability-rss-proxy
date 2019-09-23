@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\RssUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @method RssUser|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,8 +16,42 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  */
 class RssUserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $passwordEncoder;
+
+    public function __construct(ManagerRegistry $registry, UserPasswordEncoderInterface $passwordEncoder)
     {
         parent::__construct($registry, RssUser::class);
+
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    public function makeUser(string $email, string $password, bool $makeAdmin): bool
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+            throw new \InvalidArgumentException(sprintf('`%s` is not a valid email address', $email));
+        }
+
+        if (trim($password) === '') {
+            throw new \InvalidArgumentException('Empty passwords are not allowed');
+        }
+
+        $roles = ['ROLE_USER'];
+        if ($makeAdmin === true) {
+            $roles[] = 'ROLE_ADMIN';
+        }
+
+        $user = (new RssUser())
+            ->setEmail($email)
+            ->setRoles($roles);
+
+        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return true;
     }
 }

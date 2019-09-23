@@ -5,6 +5,7 @@ namespace App\Command;
 
 use App\Repository\FeedItemRepository;
 use DateTime;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,11 +22,17 @@ class FeedDeleteOldCommand extends Command
 
     /** @var FeedItemRepository */
     private $feedItemRepository;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(FeedItemRepository $feedItemRepository)
+    public function __construct(FeedItemRepository $feedItemRepository, LoggerInterface $logger)
     {
         parent::__construct();
+
         $this->feedItemRepository = $feedItemRepository;
+        $this->logger             = $logger;
     }
 
     protected function configure()
@@ -38,10 +45,8 @@ class FeedDeleteOldCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-
         if ($input->getOption('date') === null) {
-            $io->error('No date passed');
+            $this->logger->error('No date given');
 
             return 1;
         }
@@ -49,14 +54,14 @@ class FeedDeleteOldCommand extends Command
         try {
             $date = new DateTime($input->getOption('date'));
         } catch (Throwable $ex) {
-            $io->error('Not a valid date value');
+            $this->logger->error('Not a valid date value', ['date' => $input->getOption('date')]);
 
             return 1;
         }
 
         $numDeleted = $this->feedItemRepository->deleteOlderThan($date);
 
-        $io->success(sprintf('Correctly removed %s feed items', $numDeleted));
+        $this->logger->info(sprintf('Correctly removed %s feed items', $numDeleted));
 
         return 0;
     }

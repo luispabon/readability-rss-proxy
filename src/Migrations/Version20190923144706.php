@@ -31,7 +31,7 @@ final class Version20190923144706 extends AbstractMigration implements Container
             'Migration can only be executed safely on \'postgresql\'.');
 
         /** @var RssUserRepository $rssUserRepository */
-        $rssUserRepository = $this->container->get('migrations.rssUserRepository');
+        $rssUserRepository = $this->container->get('migrations.rss_user_repository');
 
         $this->addSql('ALTER TABLE rss_user ADD opml_token VARCHAR(255)');
 

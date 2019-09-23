@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    redis_host: '%env(REDIS_HOST)%'
 
 services:
     # default configuration for services in *this* file
@@ -23,18 +24,30 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    # Readability classes
     andreskrey\Readability\Configuration: ~
     andreskrey\Readability\Readability: ~
+
+    # feeds-io spits out psr7
     Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
         class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
 
-    migrations.rssUserRepository:
+    # Public alias for the user repo to be used in migrations
+    migrations.rss_user_repository:
         class: App\Repository\RssUserRepository
         public: true
-#    App\Form\RssUserType:
-#        arguments:
-#            - '%security.role_hierarchy.roles%'
 
+    # Redis
+    redis:
+        class: Redis
+        calls:
+            - [connect, ['%redis_host%']]
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    redis_cache:
+        class: Doctrine\Common\Cache\RedisCache
+        calls:
+            - [setRedis, ["@redis"]]
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            - '@redis'

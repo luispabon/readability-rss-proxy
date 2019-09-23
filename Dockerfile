@@ -33,6 +33,7 @@ ENV DB_PROTOCOL=pgsql
 ENV DB_CHARSET=UTF8
 
 ENV REDIS_HOST="redis"
+ENV REDIS_CACHE_PREFIX_SEED="rss-proxy"
 
 COPY bin/console ./bin/
 COPY composer.*  ./

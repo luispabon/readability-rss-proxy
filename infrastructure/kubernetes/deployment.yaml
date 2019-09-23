@@ -23,13 +23,14 @@ metadata:
   name: rss-proxy
   namespace: sites
 data:
-  db.host:     "10.98.240.7"
-  db.port:     "5432"
-  db.version:  "9.6"
-  db.driver:   "pdo_pgsql"
-  db.protocol: "pgsql"
-  db.charset:  "UTF8"
-  redis.host:  "redis-rss-proxy"
+  db.host:      "10.98.240.7"
+  db.port:      "5432"
+  db.version:   "9.6"
+  db.driver:    "pdo_pgsql"
+  db.protocol:  "pgsql"
+  db.charset:   "UTF8"
+  redis.host:   "redis-rss-proxy"
+  cache.prefix: "auron-rss-proxy"
 
 ---
 
@@ -41,7 +42,7 @@ metadata:
   labels:
     app: rss-proxy
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: RollingUpdate
   selector:
@@ -71,6 +72,12 @@ spec:
                 configMapKeyRef:
                   name: rss-proxy
                   key: redis.host
+
+            - name: REDIS_CACHE_PREFIX_SEED
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: cache.prefix
 
             - name: DB_HOST
               valueFrom:

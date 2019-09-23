@@ -33,7 +33,7 @@ class FeedCrudController extends AbstractController
     public function index(FeedRepository $feedRepository): Response
     {
         return $this->render('feed/index.html.twig', [
-            'feeds' => $feedRepository->findBy([], ['id' => 'ASC']),
+            'feeds' => $feedRepository->findForUser($this->getUser(), ['id' => 'ASC']),
         ]);
     }
 
@@ -48,6 +48,7 @@ class FeedCrudController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $feed->setRssUser($this->getUser());
             $entityManager->persist($feed);
             $entityManager->flush();
 
@@ -84,6 +85,10 @@ class FeedCrudController extends AbstractController
     {
         $form = $this->createForm(FeedType::class, $feed);
         $form->handleRequest($request);
+
+        if ($feed->getRssUser() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();

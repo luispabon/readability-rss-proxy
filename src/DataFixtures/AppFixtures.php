@@ -23,11 +23,19 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $user = new RssUser();
-        $user
+        $adminUser = new RssUser();
+        $adminUser
             ->setEmail('admin@admin.com')
             ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'admin'));
+            ->setPassword($this->passwordEncoder->encodePassword($adminUser, 'admin'));
+
+        $manager->persist($adminUser);
+
+
+        $user = new RssUser();
+        $user
+            ->setEmail('non_admin@admin.com')
+            ->setPassword($this->passwordEncoder->encodePassword($user, 'non_admin'));
 
         $manager->persist($user);
 
@@ -47,7 +55,7 @@ class AppFixtures extends Fixture
         foreach ($feeds as $feed) {
             $manager->persist((new Feed())
                 ->setFeedUrl($feed)
-                ->setRssUser($user)
+                ->setRssUser($adminUser)
             );
         }
 

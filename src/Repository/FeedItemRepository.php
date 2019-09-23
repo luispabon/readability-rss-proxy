@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+//use App\Entity\Feed;
+use App\Entity\Feed;
 use App\Entity\FeedItem;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\AbstractQuery;
 
 /**
  * @method FeedItem|null find($id, $lockMode = null, $lockVersion = null)
@@ -43,5 +46,21 @@ class FeedItemRepository extends ServiceEntityRepository
             ->setParameter(':date', $date->format(DATE_ATOM));
 
         return $queryBuilder->getQuery()->execute();
+    }
+
+    public function haveFeedItem(Feed $feed, string $feedItemLink): bool
+    {
+        $queryBuilder = $this->createQueryBuilder('fi');
+
+        return $queryBuilder
+                ->select('1')
+                ->where('fi.link = :link')
+                ->andWhere('fi.feed = :feed_id')
+                ->setParameters([
+                    ':link'    => $feedItemLink,
+                    ':feed_id' => $feed->getId(),
+                ])
+                ->getQuery()
+                ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
     }
 }

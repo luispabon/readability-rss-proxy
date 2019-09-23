@@ -23,8 +23,12 @@ metadata:
   name: rss-proxy
   namespace: sites
 data:
-  db.host:       "10.98.240.7"
-  redis.host:    "redis-rss-proxy"
+  db.host:     "10.98.240.7"
+  db.port:     "5432"
+  db.version:  "9.6"
+  db.driver:   "pdo_pgsql"
+  db.protocol: "pgsql"
+  redis.host:  "redis-rss-proxy"
 
 ---
 
@@ -73,11 +77,35 @@ spec:
                   name: rss-proxy
                   key: db.host
 
-            - name: DB_NAME
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: db.port
+
+            - name: DB_VERSION
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: db.version
+
+            - name: DB_DRIVER
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: db.driver
+
+            - name: DB_PROTOCOL
+              valueFrom:
+                configMapKeyRef:
+                  name: rss-proxy
+                  key: db.pgsql
+
+            - name: DB_CHARSET
               valueFrom:
                 secretKeyRef:
                   name: rss-proxy
-                  key: db.name
+                  key: db.charset
 
             - name: DB_USER
               valueFrom:

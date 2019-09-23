@@ -28,6 +28,7 @@ data:
   db.version:  "9.6"
   db.driver:   "pdo_pgsql"
   db.protocol: "pgsql"
+  db.charset:  "UTF8"
   redis.host:  "redis-rss-proxy"
 
 ---
@@ -99,11 +100,11 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: rss-proxy
-                  key: db.pgsql
+                  key: db.protocol
 
             - name: DB_CHARSET
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   name: rss-proxy
                   key: db.charset
 
@@ -163,3 +164,188 @@ spec:
       containers:
         - image: redis:5-alpine
           name: redis
+
+---
+# Ingest cronjob
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: rss-proxy-ingest
+  namespace: sites
+spec:
+  # Run job every 10 mins
+  schedule: "*/10 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      completions: 1
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: runtime
+              image: eu.gcr.io/auron-infrastructure/rss-proxy-php-fpm:latest
+              command: [ "bin/console", "feed:fetch-all" ]
+              env:
+                - name: APP_ENV
+                  value: prod
+
+                - name: APP_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: app.secret
+
+                - name: REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: redis.host
+
+                - name: DB_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.host
+
+                - name: DB_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.port
+
+                - name: DB_VERSION
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.version
+
+                - name: DB_DRIVER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.driver
+
+                - name: DB_PROTOCOL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.protocol
+
+                - name: DB_CHARSET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.charset
+
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.user
+
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.password
+
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.name
+
+---
+
+# Cleaner cronjob
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: rss-proxy-cleaner
+  namespace: sites
+spec:
+  # Run job at 03:07
+  schedule: "7 3 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      completions: 1
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: runtime
+              image: eu.gcr.io/auron-infrastructure/rss-proxy-php-fpm:latest
+              command: [ "bin/console", "feed:delete-old", "-d'-1 week'" ]
+              env:
+                - name: APP_ENV
+                  value: prod
+
+                - name: APP_SECRET
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: app.secret
+
+                - name: REDIS_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: redis.host
+
+                - name: DB_HOST
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.host
+
+                - name: DB_PORT
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.port
+
+                - name: DB_VERSION
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.version
+
+                - name: DB_DRIVER
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.driver
+
+                - name: DB_PROTOCOL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.protocol
+
+                - name: DB_CHARSET
+                  valueFrom:
+                    configMapKeyRef:
+                      name: rss-proxy
+                      key: db.charset
+
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.user
+
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.password
+
+                - name: DB_NAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: rss-proxy
+                      key: db.name

@@ -32,6 +32,6 @@ class FeedRepository extends ServiceEntityRepository
      */
     public function findForUser(RssUser $user, array $sortCriteria = ['id' => 'ASC']): array
     {
-        return $this->findBy(['rssUser' => $user]);
+        return $this->findBy(['rssUser' => $user], $sortCriteria);
     }
 }

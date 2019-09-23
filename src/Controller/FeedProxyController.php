@@ -68,6 +68,14 @@ class FeedProxyController
         return $this->psrConverter->createResponse($atomResponse);
     }
 
+    /**
+     * @Route("/{id}", name="opml_display", methods={"GET"})
+     */
+    public function getOpml(int $rssUserId, int $rssUserOpmlToken): Response
+    {
+//        $feeds = $this->feedRepository->findForUser()
+    }
+
     private function removeQueryFromUrl(string $url): string
     {
         $parsed = parse_url($url);

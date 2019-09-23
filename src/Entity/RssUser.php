@@ -43,6 +43,11 @@ class RssUser implements UserInterface
      */
     private $feeds;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $opmlToken;
+
     public function __construct()
     {
         $this->feeds = new ArrayCollection();
@@ -153,6 +158,18 @@ class RssUser implements UserInterface
                 $feed->setRssUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getOpmlToken(): ?string
+    {
+        return $this->opmlToken;
+    }
+
+    public function setOpmlToken(string $opmlToken): self
+    {
+        $this->opmlToken = $opmlToken;
 
         return $this;
     }

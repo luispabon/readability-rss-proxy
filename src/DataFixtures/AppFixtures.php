@@ -4,40 +4,26 @@ declare(strict_types=1);
 namespace App\DataFixtures;
 
 use App\Entity\Feed;
-use App\Entity\RssUser;
+use App\Repository\RssUserRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
     /**
-     * @var UserPasswordEncoderInterface
+     * @var RssUserRepository
      */
-    private $passwordEncoder;
+    private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(RssUserRepository $userRepository)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository = $userRepository;
     }
 
     public function load(ObjectManager $manager)
     {
-        $adminUser = new RssUser();
-        $adminUser
-            ->setEmail('admin@admin.com')
-            ->setRoles(['ROLE_ADMIN'])
-            ->setPassword($this->passwordEncoder->encodePassword($adminUser, 'admin'));
-
-        $manager->persist($adminUser);
-
-
-        $user = new RssUser();
-        $user
-            ->setEmail('non_admin@admin.com')
-            ->setPassword($this->passwordEncoder->encodePassword($user, 'non_admin'));
-
-        $manager->persist($user);
+        $adminUser = $this->userRepository->makeUser('admin@admin.com', 'admin', true);
+        $user      = $this->userRepository->makeUser('non_admin@admin.com', 'non_admin', false);
 
         $feeds = [
             'http://feeds.arstechnica.com/arstechnica/index',
@@ -52,11 +38,13 @@ class AppFixtures extends Fixture
             'http://www.bungie.net/News/NewsRss.ashx',
         ];
 
-        foreach ($feeds as $feed) {
-            $manager->persist((new Feed())
-                ->setFeedUrl($feed)
-                ->setRssUser($adminUser)
-            );
+        foreach ([$adminUser, $user] as $user) {
+            foreach ($feeds as $feed) {
+                $manager->persist((new Feed())
+                    ->setFeedUrl($feed)
+                    ->setRssUser($user)
+                );
+            }
         }
 
         $manager->flush();

@@ -67,14 +67,7 @@ class UserCreateCommand extends Command
             $makeAdmin = true;
         }
 
-        if ($this->userRepository->makeUser($email, $password, $makeAdmin) === true) {
-            $io->success('User created correctly');
-
-            return 0;
-        }
-
-        $io->error('Something went wrong creating your user. Dunno what though. Check logs.');
-
-        return 1;
+        $this->userRepository->makeUser($email, $password, $makeAdmin);
+        $io->success('User created correctly');
     }
 }

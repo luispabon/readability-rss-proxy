@@ -28,6 +28,9 @@ services:
     Symfony\Bridge\PsrHttpMessage\HttpFoundationFactoryInterface:
         class: Symfony\Bridge\PsrHttpMessage\Factory\HttpFoundationFactory
 
+    migrations.rssUserRepository:
+        class: App\Repository\RssUserRepository
+        public: true
 #    App\Form\RssUserType:
 #        arguments:
 #            - '%security.role_hierarchy.roles%'

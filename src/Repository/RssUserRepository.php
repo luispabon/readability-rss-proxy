@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\RssUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -28,7 +29,7 @@ class RssUserRepository extends ServiceEntityRepository
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function makeUser(string $email, string $password, bool $makeAdmin): bool
+    public function makeUser(string $email, string $password, bool $makeAdmin): RssUser
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
             throw new \InvalidArgumentException(sprintf('`%s` is not a valid email address', $email));
@@ -45,13 +46,19 @@ class RssUserRepository extends ServiceEntityRepository
 
         $user = (new RssUser())
             ->setEmail($email)
-            ->setRoles($roles);
+            ->setRoles($roles)
+            ->setOpmlToken(Uuid::uuid4()->toString());
 
         $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
 
+        $this->save($user);
+
+        return $user;
+    }
+
+    public function save(RssUser $user): void
+    {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
-
-        return true;
     }
 }

@@ -76,7 +76,6 @@ rollback:
 
 init-db: start
 	docker-compose exec postgres bin/wait-for-db.sh
-	docker-compose exec php-fpm bin/console doctrine:migrations:migrate --dry-run
 	docker-compose exec php-fpm bin/console doctrine:migrations:migrate --no-interaction
 
 load-fixtures: start

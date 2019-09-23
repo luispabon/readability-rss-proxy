@@ -20,7 +20,7 @@ services:
             - "7004:5432"
 
     webserver:
-        image: pagespeed/nginx-pagespeed:stable
+        image: nginx:alpine
         working_dir: /application
         volumes:
             - .:/application

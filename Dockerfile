@@ -60,7 +60,7 @@ RUN composer dump-env prod; \
 ############
 
 ## Actual deployable frontend image
-FROM pagespeed/nginx-pagespeed:stable AS frontend-deployment
+FROM nginx:alpine AS frontend-deployment
 
 WORKDIR /application
 

@@ -4,14 +4,20 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <title>Readability RSS Proxy{% block title %}{% endblock %}</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style type="text/css">
+        body {
+            /*font-size: 12px;*/
+        }
         .bodyblock.ui.container {
             margin : 3em 0;
             width: 90%;
         }
 
         .ui.container h1 {
-            font-size   : 3em;
+            font-size   :2em;
             font-weight : normal;
         }
 
@@ -40,31 +46,6 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-{#<div class="ui attached stackable menu">#}
-{#    <div class="ui container">#}
-{#        <a class="item">#}
-{#            <i class="home icon"></i> Home#}
-{#        </a>#}
-{#        <a class="item">#}
-{#            <i class="grid layout icon"></i> Browse#}
-{#        </a>#}
-{#        <a class="item">#}
-{#            <i class="mail icon"></i> Messages#}
-{#        </a>#}
-{#        <div class="ui simple dropdown item">#}
-{#            More#}
-{#            <i class="dropdown icon"></i>#}
-{#            <div class="menu">#}
-{#                <a class="item"><i class="edit icon"></i> Edit Profile</a>#}
-{#                <a class="item"><i class="globe icon"></i> Choose Language</a>#}
-{#                <a class="item"><i class="settings icon"></i> Account Settings</a>#}
-{#            </div>#}
-{#        </div>#}
-{#        <div class="right item">#}
-{#            <div class="ui input"><input type="text" placeholder="Search..."></div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
 <div class="ui">
     {% if app.user %}
         <div class="ui attached inverted stackable menu">

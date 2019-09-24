@@ -12,9 +12,9 @@
             <th>FeedUrl</th>
             <th>Title</th>
             <th>Description</th>
-            <th style="width:12em">Last modified</th>
-            <th style="width:4em">Icon</th>
-            <th style="max-width: 1em">Actions</th>
+            <th style="width: 12em">Last modified</th>
+            <th style="width: 4.5em">Icon</th>
+            <th style="width: 18em">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -23,7 +23,7 @@
                 <td>{{ feed.id }}</td>
                 <td><a href="{{ feed.feedUrl }}">{{ feed.feedUrl }}</a></td>
                 <td>{{ feed.title }}</td>
-                <td>{{ feed.description|truncate(20) }}</td>
+                <td>{{ feed.description|truncate(50) }}</td>
                 <td>{{ feed.lastModified|date("d-m-Y H:i \T") }}</td>
                 <td>
                     {% if feed.icon %}

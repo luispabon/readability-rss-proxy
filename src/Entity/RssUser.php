@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Unfortunately we can't call this User as it's a reserved word in Postgres and breaks doctrine fixtures.
  *
  * @ORM\Entity(repositoryClass="App\Repository\RssUserRepository")
- * @UniqueEntity("email")
+ * @UniqueEntity("email", message="Email already taken")
  */
 class RssUser implements UserInterface
 {

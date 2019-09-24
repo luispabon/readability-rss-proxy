@@ -6,12 +6,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Unfortunately we can't call this User as it's a reserved word in Postgres and breaks doctrine fixtures.
  *
  * @ORM\Entity(repositoryClass="App\Repository\RssUserRepository")
+ * @UniqueEntity("email")
  */
 class RssUser implements UserInterface
 {

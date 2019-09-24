@@ -21,19 +21,24 @@ class RssUserController extends AbstractController
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
+    /**
+     * @var RssUserRepository
+     */
+    private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder, RssUserRepository $userRepository)
     {
         $this->passwordEncoder = $passwordEncoder;
+        $this->userRepository  = $userRepository;
     }
 
     /**
      * @Route("/", name="user_index", methods={"GET"})
      */
-    public function index(RssUserRepository $userRepository): Response
+    public function index(): Response
     {
         return $this->render('user/index.html.twig', [
-            'users' => $userRepository->findAll(),
+            'users' => $this->userRepository->findAll(),
         ]);
     }
 
@@ -49,9 +54,7 @@ class RssUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($this->encodePassword($user));
-            $entityManager->flush();
+            $this->userRepository->makeUser($user->getEmail(), $user->getPassword(), false);
 
             return $this->redirectToRoute('user_index');
         }
@@ -59,16 +62,6 @@ class RssUserController extends AbstractController
         return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="user_show", methods={"GET"})
-     */
-    public function show(RssUser $user): Response
-    {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
         ]);
     }
 

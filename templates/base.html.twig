@@ -60,18 +60,14 @@
             {% endif %}
 
             <div class="right menu">
-                <div class="ui simple dropdown item">
-                    <i class="cogs icon"></i>
-                    <i class="dropdown icon"></i>
-                    <div class="menu">
-                        <a class="item" href="" onclick="alert('not yet implemented')">
-                            Change yer password
-                        </a>
-                        <a class="item" href="{{ path('app_logout') }}">
-                            Logout
-                        </a>
-                    </div>
-                </div>
+                <a class="item" href="" onclick="alert('not yet implemented')">
+                    <i class="cog icon"></i>
+                    Change yer password
+                </a>
+                <a class="item" href="{{ path('app_logout') }}">
+                    <i class="logout icon"></i>
+                    Logout
+                </a>
             </div>
         </div>
     {% endif %}

@@ -76,5 +76,5 @@ RUN sed -i "s/php-fpm/localhost/g"       /etc/nginx/conf.d/default.conf; \
     sed -i "s/listen 443/#listen 443/g"  /etc/nginx/conf.d/default.conf; \
     sed -i "s/ssl_/#ssl_/g"              /etc/nginx/conf.d/default.conf
 
-# Backend deployable
-FROM backend-pre-deployment AS backend-deployment
+COPY public/favicon.ico ./public/
+COPY public/js          ./public/js

@@ -23,3 +23,9 @@ At the moment there's a full build system based in Make, docker and deployments 
 
 At some point I might provide with public images. To be fair, I've structured the app to run 
 on something like kubernetes.
+
+## Misc notes
+
+ * Disable your adblocker while vising the admin panel. There are no ads or tracking you should 
+ worry about, and sometimes they block feed icons (ublock in firefox blocks the bbc logo from 
+ their feeds, who knows why).

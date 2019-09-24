@@ -19,7 +19,27 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<div class="ui grid container">
+<div class="ui container">
+    {% if app.user %}
+    <div class="row">
+        <div class="ui pointing menu">
+            <a class="item {% block feed_section_active %}{% endblock %}" href="{{ path('feed_index') }}">
+                Feeds
+            </a>
+            {% if is_granted('ROLE_ADMIN') %}
+            <a class="item {% block users_section_active %}{% endblock %}" href="{{ path('user_index') }}">
+                Users
+            </a>
+            {% endif %}
+
+            <div class="right menu">
+                <a class="ui item" href="{{ path('app_logout') }}">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="row">
         <div class="column">{% block body %}{% endblock %}</div>
     </div>

@@ -60,8 +60,9 @@ class RssUserController extends AbstractController
         }
 
         return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'  => $user,
+            'form'  => $form->createView(),
+            'error' => $form->isSubmitted() === true && $form->isValid() === false,
         ]);
     }
 
@@ -83,8 +84,9 @@ class RssUserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form->createView(),
+            'user'  => $user,
+            'form'  => $form->createView(),
+            'error' => $form->isSubmitted() === true && $form->isValid() === false,
         ]);
     }
 

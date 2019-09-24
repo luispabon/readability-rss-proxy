@@ -1,10 +1,33 @@
-{{ form_start(form, {'attr': {'class': 'ui form'}}) }}
-    {{ form_widget(form) }}
+{% set form_class='ui form' %}
+{% if error %}
+    {% set form_class='ui form error' %}
+{% endif %}
+
+{{ form_start(form, {'attr': {'class': form_class}}) }}
+
+
+<div class="field">
+    {{ form_label(form.email) }}
+    {{ form_widget(form.email) }}
+    {% if form_errors(form.email) %}
+    <div class="ui error message">
+        <div class="header">{{ form_errors(form.email) }}</div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="field">
+    {{ form_label(form.password) }}
+    {{ form_widget(form.password) }}
+    <div class="ui error message">
+        <div class="header">{{ form_errors(form.password) }}</div>
+    </div>
+</div>
+
+{{ form_errors(form) }}
+
 
 <div class="ui grid">
-    <div class="row">
-        {{ form_widget(form) }}
-    </div>
     <div class="two column row">
         <div class="left floated column">
             <a href="{{ path('user_index') }}">

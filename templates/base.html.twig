@@ -5,12 +5,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
     <title>Readability RSS Proxy{% block title %}{% endblock %}</title>
     <style type="text/css">
+        .bodyblock.ui.container {
+            margin : 3em 0;
+            width: 90%;
+        }
+
+        .ui.container h1 {
+            font-size   : 3em;
+            font-weight : normal;
+        }
+
+        .ui.container h2.dividing.header {
+            font-size   : 2em;
+            font-weight : normal;
+            margin      : 4em 0em 3em;
+        }
+
+
+        .ui.table {
+            table-layout : fixed;
+        }
+
         button a {
-            color: black;
+            color : black;
         }
 
         .orange a {
-            color: white;
+            color : white;
         }
 
     </style>
@@ -19,28 +40,60 @@
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-<div class="ui container">
+{#<div class="ui attached stackable menu">#}
+{#    <div class="ui container">#}
+{#        <a class="item">#}
+{#            <i class="home icon"></i> Home#}
+{#        </a>#}
+{#        <a class="item">#}
+{#            <i class="grid layout icon"></i> Browse#}
+{#        </a>#}
+{#        <a class="item">#}
+{#            <i class="mail icon"></i> Messages#}
+{#        </a>#}
+{#        <div class="ui simple dropdown item">#}
+{#            More#}
+{#            <i class="dropdown icon"></i>#}
+{#            <div class="menu">#}
+{#                <a class="item"><i class="edit icon"></i> Edit Profile</a>#}
+{#                <a class="item"><i class="globe icon"></i> Choose Language</a>#}
+{#                <a class="item"><i class="settings icon"></i> Account Settings</a>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="right item">#}
+{#            <div class="ui input"><input type="text" placeholder="Search..."></div>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+<div class="ui">
     {% if app.user %}
-    <div class="row">
-        <div class="ui pointing menu">
+        <div class="ui attached inverted stackable menu">
             <a class="item {% block feed_section_active %}{% endblock %}" href="{{ path('feed_index') }}">
-                Feeds
+                <i class="rss icon"></i> Feeds
             </a>
             {% if is_granted('ROLE_ADMIN') %}
-            <a class="item {% block users_section_active %}{% endblock %}" href="{{ path('user_index') }}">
-                Users
-            </a>
+                <a class="item {% block users_section_active %}{% endblock %}" href="{{ path('user_index') }}">
+                    <i class="user icon"></i> Users
+                </a>
             {% endif %}
 
             <div class="right menu">
-                <a class="ui item" href="{{ path('app_logout') }}">
-                    Logout
-                </a>
+                <div class="ui simple dropdown item">
+                    <i class="cogs icon"></i>
+                    <i class="dropdown icon"></i>
+                    <div class="menu">
+                        <a class="item" href="" onclick="alert('not yet implemented')">
+                            Change yer password
+                        </a>
+                        <a class="item" href="{{ path('app_logout') }}">
+                            Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     {% endif %}
-    <div class="row">
+    <div class="bodyblock ui container">
         <div class="column">{% block body %}{% endblock %}</div>
     </div>
 </div>

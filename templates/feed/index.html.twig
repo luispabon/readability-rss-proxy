@@ -8,13 +8,13 @@
     <table class="table ui">
         <thead>
         <tr>
-            <th>Id</th>
+            <th style="width:2em">Id</th>
             <th>FeedUrl</th>
             <th>Title</th>
             <th>Description</th>
-            <th>Last modified</th>
-            <th>Icon</th>
-            <th>Actions</th>
+            <th style="width:12em">Last modified</th>
+            <th style="width:4em">Icon</th>
+            <th style="max-width: 1em">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -30,7 +30,7 @@
                         <img src="{{ feed.icon }}" height="48" width="48"/>
                     {% endif %}
                 </td>
-                <td style="width: 20em">
+                <td>
                     <a href="{{ path('feed_display', {'id': feed.id}) }}">
                         <button class="ui right labeled icon orange button">
                             <i class="rss icon"></i>

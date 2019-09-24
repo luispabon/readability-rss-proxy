@@ -1,4 +1,4 @@
-{{ form_start(form, {'attr': {'class': 'ui form'}}) }}
+{{ form_start(form, {'attr': {'class': 'ui form', 'id': 'theform'}}) }}
     {{ form_widget(form) }}
 
 <div class="ui grid">
@@ -20,6 +20,14 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+  const form = $('form#theform')
+
+  form.submit(function () {
+    form.addClass('loading')
+  })
+</script>
 
 
 {{ form_end(form) }}

@@ -6,7 +6,7 @@
     <body>
     <outline text="Subscriptions" title="Subscriptions">
         {% for feed in feeds -%}
-            <outline xmlUrl='{{ url('feed_display', {'id': feed.id}) }}'/>
+            <outline xmlUrl="{{ url('feed_display', {'id': feed.id}) }}"/>
         {% endfor -%}
     </outline>
     </body>

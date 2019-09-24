@@ -8,9 +8,8 @@
     <table class="table ui">
         <thead>
         <tr>
-            <th style="width:2em">Id</th>
-            <th>FeedUrl</th>
-            <th>Title</th>
+            <th style="width:2em">ID</th>
+            <th style="width: 30em">Title</th>
             <th>Description</th>
             <th style="width: 12em">Last modified</th>
             <th style="width: 4.5em">Icon</th>
@@ -21,9 +20,11 @@
         {% for feed in feeds %}
             <tr>
                 <td>{{ feed.id }}</td>
-                <td><a href="{{ feed.feedUrl }}">{{ feed.feedUrl }}</a></td>
-                <td>{{ feed.title }}</td>
-                <td>{{ feed.description|truncate(50) }}</td>
+                <td>
+                    <strong>{{ feed.title }}</strong><br/>
+                    <a href="{{ feed.feedUrl }}" target="_blank">{{ feed.feedUrl }}</a>
+                </td>
+                <td>{{ feed.description|truncate(150) }}</td>
                 <td>{{ feed.lastModified|date("d-m-Y H:i \T") }}</td>
                 <td>
                     {% if feed.icon %}

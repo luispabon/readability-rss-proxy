@@ -5,15 +5,15 @@
 {% block body %}
     <h1>Your feeds</h1>
 
-    <table class="table ui">
+    <table class="ui sortable table">
         <thead>
         <tr>
-            <th style="width:2em">ID</th>
-            <th style="width: 4.5em">Icon</th>
-            <th style="width: 30em">Source</th>
-            <th>Description</th>
-            <th style="width: 12em">Last modified</th>
-            <th style="width: 18em">Actions</th>
+            <th class="collapsing">ID</th>
+            <th class="collapsing">Icon</th>
+            <th class="four wide">Source</th>
+            <th class="five wide">Description</th>
+            <th class="two wide">Last modified</th>
+            <th class="three wide">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -68,4 +68,12 @@
             Export to OPML
         </button>
     </a>
+
+    <script type="text/javascript">
+      // A $( document ).ready() block.
+      $( document ).ready(function() {
+        $('table').tablesort()
+      });
+
+    </script>
 {% endblock %}

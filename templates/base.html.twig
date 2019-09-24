@@ -11,13 +11,14 @@
         body {
             /*font-size: 12px;*/
         }
+
         .bodyblock.ui.container {
             margin : 3em 0;
-            width: 90%;
+            width  : 90%;
         }
 
         .ui.container h1 {
-            font-size   :2em;
+            font-size   : 2em;
             font-weight : normal;
         }
 
@@ -48,7 +49,7 @@
 <body>
 <div class="ui">
     {% if app.user %}
-        <div class="ui attached inverted stackable menu">
+        <div class="ui attached inverted menu">
             <a class="item {% block feed_section_active %}{% endblock %}" href="{{ path('feed_index') }}">
                 <i class="rss icon"></i> Feeds
             </a>
@@ -78,7 +79,6 @@
         <div class="column">{% block body %}{% endblock %}</div>
     </div>
 </div>
-
 
 {% block javascripts %}{% endblock %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>

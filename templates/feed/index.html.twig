@@ -9,10 +9,10 @@
         <thead>
         <tr>
             <th style="width:2em">ID</th>
-            <th style="width: 30em">Title</th>
+            <th style="width: 4.5em">Icon</th>
+            <th style="width: 30em">Source</th>
             <th>Description</th>
             <th style="width: 12em">Last modified</th>
-            <th style="width: 4.5em">Icon</th>
             <th style="width: 18em">Actions</th>
         </tr>
         </thead>
@@ -21,16 +21,17 @@
             <tr>
                 <td>{{ feed.id }}</td>
                 <td>
+                    {% if feed.icon %}
+                        <img src="{{ feed.icon }}" height="48" width="48"/>
+                    {% endif %}
+                </td>
+                <td>
                     <strong>{{ feed.title }}</strong><br/>
                     <a href="{{ feed.feedUrl }}" target="_blank">{{ feed.feedUrl }}</a>
                 </td>
                 <td>{{ feed.description|truncate(150) }}</td>
                 <td>{{ feed.lastModified|date("d-m-Y H:i \T") }}</td>
-                <td>
-                    {% if feed.icon %}
-                        <img src="{{ feed.icon }}" height="48" width="48"/>
-                    {% endif %}
-                </td>
+
                 <td>
                     <a href="{{ path('feed_display', {'id': feed.id}) }}">
                         <button class="ui right labeled icon orange button">

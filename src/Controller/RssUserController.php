@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\RssUser;
 use App\Form\RssUserType;
 use App\Repository\RssUserRepository;
+use App\Services\Permissions;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,22 +15,28 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/admin/user")
+ *
+ * @method RssUser getUser()
  */
 class RssUserController extends AbstractController
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
+    /** @var UserPasswordEncoderInterface */
     private $passwordEncoder;
-    /**
-     * @var RssUserRepository
-     */
+
+    /**@var RssUserRepository */
     private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, RssUserRepository $userRepository)
-    {
+    /** @var Permissions */
+    private $permissions;
+
+    public function __construct(
+        UserPasswordEncoderInterface $passwordEncoder,
+        RssUserRepository $userRepository,
+        Permissions $permissions
+    ) {
         $this->passwordEncoder = $passwordEncoder;
         $this->userRepository  = $userRepository;
+        $this->permissions     = $permissions;
     }
 
     /**
@@ -47,6 +54,11 @@ class RssUserController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        // This should already be handled by the security firewall, but just in case...
+        if ($this->getUser()->isAdmin() === false) {
+            throw $this->createAccessDeniedException('Only admin users can create other users.');
+        }
+
         $user = new RssUser();
         $user->setPassword('');
 
@@ -75,6 +87,10 @@ class RssUserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->permissions->canEditContentFromUser($this->getUser(), $user) === false) {
+                throw $this->createAccessDeniedException();
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
 
             $entityManager->persist($this->encodePassword($user));
@@ -91,11 +107,21 @@ class RssUserController extends AbstractController
     }
 
     /**
+     * Users cannot delete themselves.
+     *
      * @Route("/{id}", name="user_delete", methods={"DELETE"})
      */
     public function delete(Request $request, RssUser $user): Response
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
+            if ($this->getUser() === $user) {
+                throw $this->createAccessDeniedException('Users cannot delete themselves.');
+            }
+
+            if ($this->getUser()->isAdmin() === false) {
+                throw $this->createAccessDeniedException('Only admins can delete another user.');
+            }
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($user);
             $entityManager->flush();

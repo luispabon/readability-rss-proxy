@@ -66,7 +66,7 @@ class FeedCrudController extends AbstractController
                 // Do nothing
             }
 
-            return $this->redirectToRoute('feed_index');
+            return $this->redirectToRoute('feed_new');
         }
 
         return $this->render('feed/new.html.twig', [

@@ -21,19 +21,23 @@
 <script type="text/javascript">
   const form = $('form#theform')
 
-  // form.submit(function () {
-  //   form.addClass('loading')
-  // })
-
+  // this is the id of the form
   form.submit(function (e) {
     e.preventDefault()
+
+    const form = $(this)
+
     form.addClass('loading')
 
-    this.submit()
-    parent.reload()
-    alert('fo')
+    $.ajax({
+      type: 'POST',
+      url: form.attr('action'),
+      data: form.serialize(),
+      success: function (data) {
+        parent.location.href=parent.location.href
+      }
+    })
   })
 </script>
-
 
 {{ form_end(form) }}

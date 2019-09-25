@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"/>
@@ -49,6 +49,11 @@
             color : white;
         }
 
+        .modal iframe {
+            border: none;
+            width: 100%;
+        }
+
     </style>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -56,7 +61,7 @@
 </head>
 <body>
 <div class="ui">
-    {% if app.user %}
+    {% if app.user and embedded == false %}
         <div class="ui attached inverted menu">
             <a class="item {% block feed_section_active %}{% endblock %}" href="{{ path('feed_index') }}">
                 <i class="rss icon"></i> Feeds

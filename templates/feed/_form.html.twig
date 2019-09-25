@@ -1,31 +1,37 @@
 {{ form_start(form, {'attr': {'class': 'ui form', 'id': 'theform'}}) }}
-    {{ form_widget(form) }}
 
-<div class="ui grid">
-    <div class="row">
-        {{ form_widget(form) }}
-    </div>
-    <div class="two column row">
-        <div class="left floated column">
-            <a href="{{ path('feed_index') }}">
-                <button class="ui labeled icon button">
-                    <i class="left arrow icon"></i>
-                    Back to list
-                </button>
-            </a>
+<div class="field">
+    {{ form_label(form.feedUrl) }}
+    {{ form_widget(form.feedUrl) }}
+    {% if form_errors(form.feedUrl) %}
+        <div class="ui error message">
+            <div class="header">{{ form_errors(form.feedUrl) }}</div>
         </div>
-
-        <div class="right floated column right aligned">
-            <button class="btn ui primary button">{{ button_label|default('Save') }}</button>
-        </div>
-    </div>
+    {% endif %}
 </div>
+
+<div class="actions">
+    <button class="ui left floated positive right labeled icon button">
+        {{ button_label|default('Save') }}
+        <i class="checkmark icon"></i>
+    </button>
+</div>
+
 
 <script type="text/javascript">
   const form = $('form#theform')
 
-  form.submit(function () {
+  // form.submit(function () {
+  //   form.addClass('loading')
+  // })
+
+  form.submit(function (e) {
+    e.preventDefault()
     form.addClass('loading')
+
+    this.submit()
+    parent.reload()
+    alert('fo')
   })
 </script>
 

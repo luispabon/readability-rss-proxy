@@ -70,8 +70,9 @@ class FeedCrudController extends AbstractController
         }
 
         return $this->render('feed/new.html.twig', [
-            'feed' => $feed,
-            'form' => $form->createView(),
+            'feed'     => $feed,
+            'form'     => $form->createView(),
+            'embedded' => $request->get('embedded', false) === 'true',
         ]);
     }
 

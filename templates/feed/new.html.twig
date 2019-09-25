@@ -3,7 +3,9 @@
 {% block title %}New Feed{% endblock %}
 
 {% block body %}
-    <h1>Create new Feed</h1>
+    {% if embedded == false %}
+        <h1>Create new Feed</h1>
+    {% endif %}
 
     {{ include('feed/_form.html.twig') }}
 {% endblock %}

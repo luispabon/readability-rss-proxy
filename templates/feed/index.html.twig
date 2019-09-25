@@ -55,7 +55,10 @@
         </tbody>
     </table>
 
-    <a href="{{ path('feed_new') }}">
+
+
+{#    <a href="{{ path('feed_new') }}">#}
+    <a onclick="$('.new_feed.modal').modal('show')">
         <button class="ui right labeled icon primary button">
             <i class="plus icon"></i>
             Add new feed
@@ -68,6 +71,14 @@
             Export to OPML
         </button>
     </a>
+
+    <div class="ui new_feed modal">
+        <i class="close icon"></i>
+        <div class="header">
+            Add feed
+        </div>
+        <iframe src="{{ path('feed_new', {'embedded': 'true'}) }}" style="height: 250px;"></iframe>
+    </div>
 
     <script type="text/javascript">
       // A $( document ).ready() block.

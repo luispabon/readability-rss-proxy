@@ -83,7 +83,7 @@ class FeedProxyController extends AbstractController
     {
         $user = $this->userRepository->findByIdAndOpmlToken($userId, $token);
         if ($user === null) {
-            throw new $this->createNotFoundException('Feed not found.');
+            return new Response('Feed not found', 404);
         }
 
         $response = $this->render('feed/opml.xml.twig', [
@@ -93,11 +93,16 @@ class FeedProxyController extends AbstractController
         $reqHeaders = $request->headers;
         $opmlMime   = 'text/x-opml';
 
+        // If client hasn't said specifically they accept opml (possibly a browser), simply return a standard xml
+        // mime type. This is also correct, since opml is xml
         $response->headers->set('content-type', $reqHeaders->get('accept') === $opmlMime ? $opmlMime : 'text/xml');
 
         return $response;
     }
 
+    /**
+     * Given a url, return it without any query parameters.
+     */
     private function removeQueryFromUrl(string $url): string
     {
         $parsed = parse_url($url);

@@ -9,15 +9,15 @@
 
     <style type="text/css">
         body {
-            font-size: 16px;
+            font-size : 16px;
         }
 
         .menu .item {
-            font-size: 1.3em;
+            font-size : 1.3em;
         }
 
         button.ui {
-            font-size: 1em !important;
+            font-size : 1em !important;
         }
 
         .bodyblock.ui.container {
@@ -70,7 +70,7 @@
             <div class="right menu">
                 <a class="item" href="" onclick="alert('not yet implemented')">
                     <i class="user circle icon"></i>
-                    Account settings
+                    {{ app.user.getEmail() }}
                 </a>
                 <a class="item" href="{{ path('app_logout') }}">
                     <i class="logout icon"></i>

@@ -15,7 +15,7 @@ use FeedIo\Feed\ItemInterface as RawFeedItem;
 use FeedIo\Feed\Node\Element as NodeElement;
 use FeedIo\FeedInterface;
 use FeedIo\FeedIo;
-use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\Promise;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -35,7 +35,7 @@ class Processor
     /** @var Readability */
     private $readability;
 
-    /** @var Client */
+    /** @var ClientInterface */
     private $guzzle;
 
     /** @var FeedItemRepository */
@@ -51,7 +51,7 @@ class Processor
         FeedRepository $feedRepository,
         FeedItemRepository $feedItemRepository,
         Readability $readability,
-        Client $guzzle,
+        ClientInterface $guzzle,
         LoggerInterface $logger
     ) {
         $this->feedIo             = $feedIo;

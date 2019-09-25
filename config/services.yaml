@@ -24,6 +24,9 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    GuzzleHttp\ClientInterface:
+        class: GuzzleHttp\Client
+
     # Readability classes
     andreskrey\Readability\Configuration: ~
     andreskrey\Readability\Readability: ~

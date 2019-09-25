@@ -15,13 +15,13 @@ class Permissions
      *
      * Given the content owner and the user trying to do something, reach a decision.
      */
-    public function canEditContentFromUser(RssUser $contentOwner, RssUser $actingUser): bool
+    public function canEditContentFromUser(RssUser $actingUser, RssUser $contentOwner): bool
     {
-        if (in_array('ROLE_ADMIN', $actingUser->getRoles(), true) === true) {
+        if ($actingUser->isAdmin() === true) {
             return true;
         }
 
-        if ($actingUser->getId() === $contentOwner->getId()) {
+        if ($actingUser === $contentOwner) {
             return true;
         }
 

@@ -77,16 +77,6 @@ class FeedCrudController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="feed_show", methods={"GET"})
-     */
-    public function show(Feed $feed): Response
-    {
-        return $this->render('feed/show.html.twig', [
-            'feed' => $feed,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="feed_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Feed $feed): Response
@@ -105,8 +95,9 @@ class FeedCrudController extends AbstractController
         }
 
         return $this->render('feed/edit.html.twig', [
-            'feed' => $feed,
-            'form' => $form->createView(),
+            'feed'     => $feed,
+            'form'     => $form->createView(),
+            'embedded' => $request->get('embedded', false) === 'true',
         ]);
     }
 

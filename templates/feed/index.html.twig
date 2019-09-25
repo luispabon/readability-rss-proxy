@@ -33,18 +33,26 @@
                 <td>{{ feed.lastModified|date("d-m-Y H:i \T") }}</td>
 
                 <td>
+                    {% set modal_class = 'edit_feed_' ~ feed.id %}
+
                     <a href="{{ path('feed_display', {'id': feed.id}) }}">
                         <button class="ui right labeled icon orange button">
                             <i class="rss icon"></i>
                             RSS
                         </button>
                     </a>
-                    <a href="{{ path('feed_edit', {'id': feed.id}) }}">
+                    <a onclick="$('.{{ modal_class }}.modal').modal('show')">
                         <button class="ui right labeled icon button">
                             <i class="edit icon"></i>
                             Edit
                         </button>
                     </a>
+
+                    {% include 'feed/modal.html.twig' with {
+                        header_text: 'Edit "' ~ feed.title ~ '" feed',
+                        iframe_url:  path('feed_edit', {'id': feed.id, 'embedded': 'true'}),
+                        modal_class: modal_class
+                    } %}
                 </td>
             </tr>
         {% else %}
@@ -55,9 +63,12 @@
         </tbody>
     </table>
 
+    {% include 'feed/modal.html.twig' with {
+        header_text: 'Add feed',
+        iframe_url:  path('feed_new', {'embedded': 'true'}),
+        modal_class: 'new_feed'
+    } %}
 
-
-{#    <a href="{{ path('feed_new') }}">#}
     <a onclick="$('.new_feed.modal').modal('show')">
         <button class="ui right labeled icon primary button">
             <i class="plus icon"></i>
@@ -72,19 +83,9 @@
         </button>
     </a>
 
-    <div class="ui new_feed modal">
-        <i class="close icon"></i>
-        <div class="header">
-            Add feed
-        </div>
-        <iframe src="{{ path('feed_new', {'embedded': 'true'}) }}" style="height: 250px;"></iframe>
-    </div>
-
     <script type="text/javascript">
-      // A $( document ).ready() block.
-      $( document ).ready(function() {
+      $(document).ready(function () {
         $('table').tablesort()
-      });
-
+      })
     </script>
 {% endblock %}

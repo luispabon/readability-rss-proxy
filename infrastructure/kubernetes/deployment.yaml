@@ -133,6 +133,9 @@ spec:
                   name: rss-proxy
                   key: db.name
 
+            - name: READABILITY_JS_ENDPOINT
+              value: http://readability-js-server:3000
+
       containers:
         - image: eu.gcr.io/auron-infrastructure/rss-proxy-nginx:latest
           name: nginx
@@ -209,6 +212,9 @@ spec:
                 secretKeyRef:
                   name: rss-proxy
                   key: db.name
+
+            - name: READABILITY_JS_ENDPOINT
+              value: http://readability-js-server:3000
 
 ---
 
@@ -344,6 +350,8 @@ spec:
                       name: rss-proxy
                       key: db.name
 
+                - name: READABILITY_JS_ENDPOINT
+                  value: http://readability-js-server:3000
 ---
 
 # Cleaner cronjob
@@ -436,3 +444,50 @@ spec:
                     secretKeyRef:
                       name: rss-proxy
                       key: db.name
+
+                - name: READABILITY_JS_ENDPOINT
+                  value: ""
+
+---
+
+##### READABILITY JS SERVER #####
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: readability-js-server
+  namespace: sites
+  labels:
+    app: readability-js-server
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    app: readability-js-server
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readability-js-server
+  namespace: sites
+  labels:
+    app: readability-js-server
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: readability-js-server
+  template:
+    metadata:
+      labels:
+        app: readability-js-server
+    spec:
+      containers:
+        - image: phpdockerio/readability-js-server
+          name: runtime

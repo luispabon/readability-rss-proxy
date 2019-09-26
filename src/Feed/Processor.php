@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Feed;
 
-use andreskrey\Readability\Readability;
 use App\Entity\Feed;
 use App\Entity\FeedItem;
 use App\Repository\FeedItemRepository;
@@ -21,10 +20,15 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use function GuzzleHttp\Promise\settle;
 
+/**
+ * Each feed item is persisted into our data store, with a twist: we overwrite whatever small description the feed
+ * comes from with the actual content of the page the feed item links to, run through a Readability analog.
+ *
+ * So any app or whatever that downloads the feed automagically gets a pseudo offline mode.
+ */
 class Processor
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
-    private const USER_AGENT_HEADER    = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:70.0) Gecko/20100101 Firefox/70.0';
 
     /** @var FeedIo */
     private $feedIo;
@@ -32,34 +36,32 @@ class Processor
     /** @var FeedRepository */
     private $feedRepository;
 
-    /** @var Readability */
-    private $readability;
-
     /** @var ClientInterface */
     private $guzzle;
 
     /** @var FeedItemRepository */
     private $feedItemRepository;
 
-    /**
-     * @var LoggerInterface
-     */
+    /** @var LoggerInterface */
     private $logger;
+
+    /** @var string */
+    private $readabilityEndpoint;
 
     public function __construct(
         FeedIo $feedIo,
         FeedRepository $feedRepository,
         FeedItemRepository $feedItemRepository,
-        Readability $readability,
         ClientInterface $guzzle,
+        string $readabilityEndpoint,
         LoggerInterface $logger
     ) {
-        $this->feedIo             = $feedIo;
-        $this->feedRepository     = $feedRepository;
-        $this->feedItemRepository = $feedItemRepository;
-        $this->readability        = $readability;
-        $this->guzzle             = $guzzle;
-        $this->logger             = $logger;
+        $this->feedIo              = $feedIo;
+        $this->feedRepository      = $feedRepository;
+        $this->feedItemRepository  = $feedItemRepository;
+        $this->guzzle              = $guzzle;
+        $this->logger              = $logger;
+        $this->readabilityEndpoint = $readabilityEndpoint;
     }
 
     /**
@@ -112,11 +114,11 @@ class Processor
             $rawFeedItems = [];
 
             foreach ($feedContents as $feedItemKey => $rawFeedItem) {
-                $currentItemNumber = $feedItemKey + 1;
-
                 /** @var RawFeedItem $rawFeedItem */
+                $currentItemNumber = $feedItemKey + 1;
+                $feedLink          = $rawFeedItem->getLink();
 
-                if ($this->feedItemRepository->haveFeedItem($feed, $rawFeedItem->getLink()) === true) {
+                if ($this->feedItemRepository->haveFeedItem($feed, $feedLink) === true) {
                     $this->logger->info(sprintf('Skipping %s', $rawFeedItem->getTitle()));
                     continue;
                 }
@@ -128,16 +130,17 @@ class Processor
                     $rawFeedItem->getTitle()
                 ));
 
-                // Some sites are hostile to weird user agents, so use firefox's
-                $promises[$rawFeedItem->getLink()] = $this->guzzle->getAsync($rawFeedItem->getLink(), [
-                        'headers' => [
-                            'User-Agent' => self::USER_AGENT_HEADER,
-                            'Accept'     => 'text/html',
-                        ],
-                    ]
-                );
+                // Send link to readability-js-server asynchronously to get readable content
+                $promises[$feedLink] = $this->guzzle->requestAsync('POST', $this->readabilityEndpoint, [
+                    'headers' => [
+                        'content-type' => 'application/json',
+                    ],
+                    'json'    => [
+                        'url' => $feedLink,
+                    ],
+                ]);
 
-                $rawFeedItems[$rawFeedItem->getLink()] = $rawFeedItem;
+                $rawFeedItems[$feedLink] = $rawFeedItem;
 
                 if (($currentItemNumber % self::FEED_ITEM_BATCH_SIZE === 0) || $currentItemNumber === $numItems) {
                     $this->processBatch($promises, $rawFeedItems, $feed);
@@ -179,12 +182,15 @@ class Processor
 
             // We might have been throttled or something. We'll catch ya next time
             if (array_key_exists('value', $promiseResult) === false) {
-                $this->logger->info(sprintf(
-                    '<error>Could not acquire %s [%s]</error>',
+                $this->logger->info(sprintf('<error>Could not acquire %s [%s]</error>',
                     $rawFeedItem->getTitle(),
                     $rawFeedItem->getLink()
-                ));
-                dump($promiseResult);
+                ),
+                    [
+                        'promiseResult' => $promiseResult,
+                    ]
+                );
+
                 continue;
             }
 
@@ -192,12 +198,21 @@ class Processor
             $response = $promiseResult['value'];
 
             $rawContents = $response->getBody()->getContents();
+            $content     = json_decode($rawContents)->content ?? '';
+
+            if ($content === '') {
+                $this->logger->warning(sprintf('Empty readability response for %s', $rawFeedItem->getLink()), [
+                    'promiseResult' => $promiseResult,
+                ]);
+
+                continue;
+            }
 
             // We're depending on this item not to exist already
             $feedItem = (new FeedItem())
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
-                ->setDescription($this->getReadableContent($rawContents))
+                ->setDescription($content)
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified())
                 ->setCreatedAt(new DateTime());
@@ -228,14 +243,5 @@ class Processor
         }
 
         return null;
-    }
-
-    private function getReadableContent(string $rawContent): string
-    {
-        if ($this->readability->parse($rawContent) === true) {
-            return $this->readability->getContent();
-        }
-
-        return $rawContent;
     }
 }

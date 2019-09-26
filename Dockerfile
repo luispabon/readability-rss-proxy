@@ -35,6 +35,8 @@ ENV DB_CHARSET=UTF8
 ENV REDIS_HOST="redis"
 ENV REDIS_CACHE_PREFIX_SEED="rss-proxy"
 
+ENV READABILITY_JS_ENDPOINT="http://foo/bar/"
+
 COPY bin/console ./bin/
 COPY composer.*  ./
 

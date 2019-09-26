@@ -23,14 +23,14 @@ metadata:
   name: rss-proxy
   namespace: sites
 data:
-  db.host:      "10.98.240.7"
+  db.host:      "IP_OR_HOSTNAME_FOR_DATABASE"
   db.port:      "5432"
   db.version:   "9.6"
   db.driver:    "pdo_pgsql"
   db.protocol:  "pgsql"
   db.charset:   "UTF8"
   redis.host:   "redis-rss-proxy"
-  cache.prefix: "auron-rss-proxy"
+  cache.prefix: "PREFIX_FOR_CACHE_WHATEVER_YOU_WANT_HERE"
 
 ---
 
@@ -259,6 +259,8 @@ spec:
           name: redis
 
 ---
+#### RSS PROXY CRONJOBS ####
+
 # Ingest cronjob
 apiVersion: batch/v1beta1
 kind: CronJob

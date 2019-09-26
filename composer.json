@@ -5,6 +5,7 @@
         "php": "^7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "ext-json": "*",
         "andreskrey/readability.php": "^2.1",
         "debril/rss-atom-bundle": "^5.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",

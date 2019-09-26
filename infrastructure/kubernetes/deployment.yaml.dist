@@ -1,4 +1,4 @@
-# See https://github.com/idev4u/concourse-ci-kube
+#### RSS Proxy website ###
 
 apiVersion: v1
 kind: Service

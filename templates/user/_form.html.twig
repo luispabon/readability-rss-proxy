@@ -1,48 +1,54 @@
-{% set form_class='ui form' %}
-{% if error %}
-    {% set form_class='ui form error' %}
-{% endif %}
-
-{{ form_start(form, {'attr': {'class': form_class}}) }}
-
-
-<div class="field">
-    {{ form_label(form.email) }}
-    {{ form_widget(form.email) }}
-    {% if form_errors(form.email) %}
-    <div class="ui error message">
-        <div class="header">{{ form_errors(form.email) }}</div>
-    </div>
-    {% endif %}
-</div>
-
-<div class="field">
-    {{ form_label(form.password) }}
-    {{ form_widget(form.password) }}
-    <div class="ui error message">
-        <div class="header">{{ form_errors(form.password) }}</div>
-    </div>
-</div>
-
-{{ form_errors(form) }}
-
-
 <div class="ui grid">
-    <div class="two column row">
-        <div class="left floated column">
-            <a href="{{ path('user_index') }}">
-                <button class="ui labeled icon button">
-                    <i class="left arrow icon"></i>
-                    Back to list
-                </button>
-            </a>
+    <div class="eight wide column centered">
+        <h1>{{ header_text }}</h1>
+
+        {% set form_class='ui form' %}
+        {% if error %}
+            {% set form_class='ui form error' %}
+        {% endif %}
+
+        {{ form_start(form, {'attr': {'class': form_class}}) }}
+
+
+        <div class="field">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email) }}
+            {% if form_errors(form.email) %}
+                <div class="ui error message">
+                    <div class="header">{{ form_errors(form.email) }}</div>
+                </div>
+            {% endif %}
         </div>
 
-        <div class="right floated column right aligned">
-            <button class="btn ui primary button">{{ button_label|default('Save') }}</button>
+        <div class="field">
+            {{ form_label(form.password) }}
+            {{ form_widget(form.password) }}
+            <div class="ui error message">
+                <div class="header">{{ form_errors(form.password) }}</div>
+            </div>
         </div>
+
+        {{ form_errors(form) }}
+
+
+        <div class="ui grid">
+            <div class="two column row">
+                <div class="left floated column">
+                    <a href="{{ path('user_index') }}">
+                        <button class="ui labeled icon button">
+                            <i class="left arrow icon"></i>
+                            Back to list
+                        </button>
+                    </a>
+                </div>
+
+                <div class="right floated column right aligned">
+                    <button class="btn ui primary button">{{ button_label|default('Save') }}</button>
+                </div>
+            </div>
+        </div>
+
+
+        {{ form_end(form) }}
     </div>
 </div>
-
-
-{{ form_end(form) }}

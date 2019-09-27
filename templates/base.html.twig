@@ -67,6 +67,9 @@
 <div class="ui">
     {% if app.user and embedded == false %}
         <div class="ui attached inverted menu">
+            <a class="item {% block reader_section_active %}{% endblock %}" href="{{ path('reader_index') }}">
+                <i class="book icon"></i> Reader
+            </a>
             <a class="item {% block feed_section_active %}{% endblock %}" href="{{ path('feed_index') }}">
                 <i class="rss icon"></i> Feeds
             </a>

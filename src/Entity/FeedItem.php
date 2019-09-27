@@ -52,6 +52,11 @@ class FeedItem
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $excerpt;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +130,18 @@ class FeedItem
     public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getExcerpt(): ?string
+    {
+        return $this->excerpt;
+    }
+
+    public function setExcerpt(string $excerpt): self
+    {
+        $this->excerpt = $excerpt;
 
         return $this;
     }

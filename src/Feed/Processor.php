@@ -212,6 +212,7 @@ class Processor
             $feedItem = (new FeedItem())
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
+                ->setExcerpt($rawFeedItem->getDescription())
                 ->setDescription($content)
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified())

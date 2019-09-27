@@ -10,6 +10,13 @@ parameters:
     database_protocol: '%env(DB_PROTOCOL)%'
     database_charset:  '%env(DB_CHARSET)%'
 
+services:
+    result_cache:
+        class: Doctrine\Common\Cache\RedisCache
+        calls:
+            - method: setRedis
+              arguments:
+                    - '@redis'
 doctrine:
     dbal:
         driver:         '%database_driver%'
@@ -31,3 +38,14 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
+
+        query_cache_driver:
+            type: apcu
+
+        metadata_cache_driver:
+            type: apcu
+
+        result_cache_driver:
+            type: service
+            id: result_cache
+            namespace: doctrine/result

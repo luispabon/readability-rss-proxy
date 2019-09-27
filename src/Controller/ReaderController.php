@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\RssUser;
 use App\Repository\FeedItemRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -10,6 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/reader")
+ *
+ * @method RssUser getUser()
  */
 class ReaderController extends AbstractController
 {
@@ -28,9 +31,13 @@ class ReaderController extends AbstractController
      */
     public function index(): Response
     {
-        $feeds = $this->feedItemRepository->findBy([], ['lastModified' => 'desc']);
-        
-        dd($feeds);
+        $feedItems = $this->feedItemRepository->findAllForUser($this->getUser());
+
+        dump($feedItems);
+
+        return $this->render('reader/index.html.twig', [
+            'feedItems' => $feedItems,
+        ]);
     }
 
 }

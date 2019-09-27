@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-//use App\Entity\Feed;
+use Doctrine\ORM\Query\Expr\Join;
 use App\Entity\Feed;
 use App\Entity\FeedItem;
+use App\Entity\RssUser;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
@@ -62,5 +63,24 @@ class FeedItemRepository extends ServiceEntityRepository
                 ])
                 ->getQuery()
                 ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
+    }
+
+    /**
+     * @return FeedItem[]
+     */
+    public function findAllForUser(RssUser $user, array $sortCriteria = []): array
+    {
+        $queryBuilder = $this->createQueryBuilder('fi');
+
+        $queryBuilder
+            ->innerJoin(Feed::class, 'f', Join::WITH, 'f.id = fi.feed')
+            ->where('f.rssUser = :user_id')
+            ->setParameter(':user_id', $user->getId());
+
+        foreach ($sortCriteria as $column => $direction) {
+            $queryBuilder->orderBy($column, $direction);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

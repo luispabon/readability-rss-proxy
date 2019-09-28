@@ -5,13 +5,16 @@ namespace App\Entity;
 
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
+/**
+ * Unravel the knp paginator in a manner that can be easily serialized into json.
+ */
 class PaginatedFeedItems
 {
-    /** @var array|FeedItem[] */
-    private $items = [];
-
     /** @var array */
     private $paginator;
+
+    /** @var array|FeedItem[] */
+    private $items = [];
 
     public function __construct(PaginationInterface $paginator)
     {
@@ -20,27 +23,8 @@ class PaginatedFeedItems
             'total'       => $paginator->getTotalItemCount(),
             'currentPage' => $paginator->getCurrentPageNumber(),
             'perPage'     => $paginator->getItemNumberPerPage(),
+            'numPages'    => ceil($paginator->getTotalItemCount() / $paginator->getItemNumberPerPage()),
         ];
-    }
-
-    /**
-     * @return FeedItem[]|array
-     */
-    public function getItems()
-    {
-        return $this->items;
-    }
-
-    /**
-     * @param FeedItem[]|array $items
-     *
-     * @return PaginatedFeedItems
-     */
-    public function setItems($items)
-    {
-        $this->items = $items;
-
-        return $this;
     }
 
     /**
@@ -52,14 +36,11 @@ class PaginatedFeedItems
     }
 
     /**
-     * @param array $paginator
-     *
-     * @return PaginatedFeedItems
+     * @return FeedItem[]|array
      */
-    public function setPaginator(array $paginator): PaginatedFeedItems
+    public function getItems(): array
     {
-        $this->paginator = $paginator;
-
-        return $this;
+        return $this->items;
     }
+
 }

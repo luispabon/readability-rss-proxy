@@ -43,7 +43,12 @@ class ReaderController extends AbstractController
      */
     public function listFeedItems(int $page): Response
     {
-        $feedItems = $this->feedItemRepository->findAllForUserPaginated($this->getUser(), [], $page, 10);
+        $feedItems = $this->feedItemRepository->findAllForUserPaginated(
+            $this->getUser(),
+            [],
+            $page,
+            50
+        );
 
         $response          = JsonResponse::create();
         $normalizerOptions = ['ignored_attributes' => ['feed']];

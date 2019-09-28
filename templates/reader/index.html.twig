@@ -1,7 +1,10 @@
 {% extends 'reader/reader_base.html.twig' %}
 
 {% block body %}
-    <div id="items_container"></div>
+    <div class="ui vertical inverted sidebar menu" id="toc">
+    </div>
+
+    <div id="items_container" class="ui items"></div>
 
     <script type="text/javascript">
       const container = $('#items_container')
@@ -9,24 +12,24 @@
         type: 'GET',
         url: '{{ path('reader_index_json', {'page': 1}) }}',
         success: function (data) {
-          let feedItem
-          let header
-          let excerpt
           data.items.forEach((item) => {
-            feedItem = $('<div></div>').attr('class', 'feed_item ui raised card')
+            let header      = $('<a></a>').attr('class', 'header').text(item.title)
+            let image       = $('<div></div>').attr('class', 'image').append($('<img/>').attr('src', '/images/placeholder_image.png'))
+            let meta        = $('<div></div>').attr('class', 'meta').text(item.feed_title)
+            let description = $('<div></div>').attr('class', 'description').append($.parseHTML(item.excerpt))
+            let extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
 
-            cardHeader =$('<div></div>').attr('class', 'header').text(item.title)
-            cardDescription =$('<div></div>').attr('class', 'description').append($.parseHTML(item.excerpt))
-            cardContent =$('<div></div>')
-                    .attr('class', 'content')
-                    .append(cardHeader)
-                    .append(cardDescription)
+            let content = $('<div></div>').attr('class', 'content')
+              .append(header)
+              .append(meta)
+              .append(description)
+              .append(extra)
 
-
+            let feedItem = $('<div></div>').attr('class', 'item')
 
             feedItem
-              .append(cardContent)
-              .append($('<hr/>'))
+              .append(image)
+              .append(content)
 
             container.append(feedItem)
           })

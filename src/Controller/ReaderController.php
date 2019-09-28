@@ -47,7 +47,7 @@ class ReaderController extends AbstractController
             $this->getUser(),
             [],
             $page,
-            50
+            20
         );
 
         $response          = JsonResponse::create();

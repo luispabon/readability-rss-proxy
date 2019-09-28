@@ -217,6 +217,7 @@ class Processor
                 ->setTitle($rawFeedItem->getTitle())
                 ->setExcerpt($excerpt)
                 ->setDescription($content)
+                ->setImage($this->getFirstImageFromStringsFilter($content))
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified())
                 ->setCreatedAt(new DateTime());
@@ -247,5 +248,17 @@ class Processor
         }
 
         return null;
+    }
+
+    /**
+     * Finds and returns the first image link found on a list of strings. If any, that is
+     */
+    public function getFirstImageFromStringsFilter(string $content): ?string
+    {
+        $regexp  = '/(http(s?):)([\/|.|\w|\s|-])*\.(?:jpg|gif|png)/i';
+        $matches = [];
+        preg_match($regexp, $content, $matches);
+
+        return count($matches) > 0 ? $matches[0] : null;
     }
 }

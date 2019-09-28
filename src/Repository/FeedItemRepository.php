@@ -68,7 +68,7 @@ class FeedItemRepository extends ServiceEntityRepository
     /**
      * @return FeedItem[]
      */
-    public function findAllForUser(RssUser $user, array $sortCriteria = []): array
+    public function findAllForUser(RssUser $user, array $sortCriteria = [], int $page = 0, int $perPage = 10): array
     {
         $queryBuilder = $this->createQueryBuilder('fi');
 
@@ -81,6 +81,6 @@ class FeedItemRepository extends ServiceEntityRepository
             $queryBuilder->orderBy($column, $direction);
         }
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_SIMPLEOBJECT);
     }
 }

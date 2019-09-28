@@ -133,8 +133,67 @@
     "guzzlehttp/psr7": {
         "version": "1.6.1"
     },
+    "hoa/compiler": {
+        "version": "3.17.08.08"
+    },
+    "hoa/consistency": {
+        "version": "1.17.05.02"
+    },
+    "hoa/event": {
+        "version": "1.17.01.13"
+    },
+    "hoa/exception": {
+        "version": "1.17.01.16"
+    },
+    "hoa/file": {
+        "version": "1.17.07.11"
+    },
+    "hoa/iterator": {
+        "version": "2.17.01.10"
+    },
+    "hoa/math": {
+        "version": "1.17.05.16"
+    },
+    "hoa/protocol": {
+        "version": "1.17.01.14"
+    },
+    "hoa/regex": {
+        "version": "1.17.01.13"
+    },
+    "hoa/stream": {
+        "version": "1.17.02.21"
+    },
+    "hoa/ustring": {
+        "version": "4.17.01.16"
+    },
+    "hoa/visitor": {
+        "version": "2.17.01.16"
+    },
+    "hoa/zformat": {
+        "version": "1.17.01.10"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "jms/metadata": {
+        "version": "2.1.0"
+    },
+    "jms/serializer": {
+        "version": "3.3.0"
+    },
+    "jms/serializer-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "384cec52df45f3bfd46a09930d6960a58872b268"
+        },
+        "files": [
+            "config/packages/dev/jms_serializer.yaml",
+            "config/packages/jms_serializer.yaml",
+            "config/packages/prod/jms_serializer.yaml"
+        ]
     },
     "knplabs/knp-components": {
         "version": "v2.2.0"
@@ -153,15 +212,6 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
-    },
-    "phpdocumentor/reflection-common": {
-        "version": "2.0.0"
-    },
-    "phpdocumentor/reflection-docblock": {
-        "version": "4.3.2"
-    },
-    "phpdocumentor/type-resolver": {
-        "version": "1.0.1"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -356,9 +406,6 @@
     "symfony/property-access": {
         "version": "v4.3.4"
     },
-    "symfony/property-info": {
-        "version": "v4.3.4"
-    },
     "symfony/psr-http-message-bridge": {
         "version": "v1.2.0"
     },
@@ -400,12 +447,6 @@
     },
     "symfony/security-http": {
         "version": "v4.3.4"
-    },
-    "symfony/serializer": {
-        "version": "v4.3.4"
-    },
-    "symfony/serializer-pack": {
-        "version": "v1.0.2"
     },
     "symfony/service-contracts": {
         "version": "v1.1.6"
@@ -496,9 +537,6 @@
     },
     "twig/twig": {
         "version": "v2.11.3"
-    },
-    "webmozart/assert": {
-        "version": "1.5.0"
     },
     "zendframework/zend-code": {
         "version": "3.3.2"

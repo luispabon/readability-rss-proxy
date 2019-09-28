@@ -6,8 +6,10 @@ namespace App\Controller;
 use App\Entity\RssUser;
 use App\Repository\FeedItemRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/reader")
@@ -20,24 +22,38 @@ class ReaderController extends AbstractController
      * @var FeedItemRepository
      */
     private $feedItemRepository;
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
 
-    public function __construct(FeedItemRepository $feedItemRepository)
+    public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer)
     {
         $this->feedItemRepository = $feedItemRepository;
+
+        $this->serializer = $serializer;
     }
 
     /**
-     * @Route("/", name="reader_index", methods={"GET"})
+     * @Route("/", name="reader_index", methods={"GET"}, format="html")
      */
-    public function index(): Response
+    public function reader(): Response
+    {
+        return $this->render('reader/index.html.twig', [
+            'feedItems' => '',
+        ]);
+    }
+
+    /**
+     * @Route("/{page}", requirements={"page"="\d+"}, name="reader_index_json", methods={"GET"}, format="json")
+     */
+    public function listFeedItems(int $page): Response
     {
         $feedItems = $this->feedItemRepository->findAllForUser($this->getUser());
 
-        dump($feedItems);
-
-        return $this->render('reader/index.html.twig', [
-            'feedItems' => $feedItems,
-        ]);
+        return new JsonResponse($this->serializer->serialize($feedItems, 'json', [
+            'ignored_attributes' => ['feed']
+        ]));
     }
 
 }

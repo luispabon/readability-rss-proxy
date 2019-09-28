@@ -13,13 +13,19 @@
           let header
           let excerpt
           data.items.forEach((item) => {
-            feedItem = $('<div></div>').attr('class', 'feed_item')
-            header   = $('<h1></h1>').text(item.title)
-            excerpt  = $('<div></div>').append($.parseHTML(item.description))
+            feedItem = $('<div></div>').attr('class', 'feed_item ui raised card')
+
+            cardHeader =$('<div></div>').attr('class', 'header').text(item.title)
+            cardDescription =$('<div></div>').attr('class', 'description').append($.parseHTML(item.excerpt))
+            cardContent =$('<div></div>')
+                    .attr('class', 'content')
+                    .append(cardHeader)
+                    .append(cardDescription)
+
+
 
             feedItem
-              .append(header)
-              .append(excerpt)
+              .append(cardContent)
               .append($('<hr/>'))
 
             container.append(feedItem)

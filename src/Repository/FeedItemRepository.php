@@ -76,7 +76,12 @@ class FeedItemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return PaginationInterface
+     * @param RssUser $user
+     * @param array   $sortCriteria Example: ['title DESC', 'lastModified ASC']
+     * @param int     $page
+     * @param int     $perPage
+     *
+     * @return PaginatedFeedItems
      */
     public function findAllForUserPaginated(
         RssUser $user,
@@ -87,13 +92,13 @@ class FeedItemRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('fi');
 
         $queryBuilder
-            ->select('fi.id, fi.title, fi.excerpt, fi.image, f.title as feed_title')
+            ->select('fi.id, fi.title, fi.excerpt, fi.image, fi.lastModified as last_modified, f.title as feed_title')
             ->innerJoin(Feed::class, 'f', Join::WITH, 'f.id = fi.feed')
             ->where('f.rssUser = :user_id')
             ->setParameter(':user_id', $user->getId());
 
-        foreach ($sortCriteria as $column => $direction) {
-            $queryBuilder->orderBy($column, $direction);
+        foreach ($sortCriteria as $criterion) {
+            $queryBuilder->add('orderBy', $criterion);
         }
 
         return new PaginatedFeedItems($this->paginator->paginate($queryBuilder->getQuery(), $page, $perPage));

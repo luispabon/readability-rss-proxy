@@ -5,12 +5,11 @@ namespace App\Controller;
 
 use App\Entity\RssUser;
 use App\Repository\FeedItemRepository;
-use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/reader")
@@ -28,15 +27,14 @@ class ReaderController extends AbstractController
      */
     private $serializer;
     /**
-     * @var \Symfony\Component\Serializer\SerializerInterface
+     * @var SerializerInterface
      */
     private $symSerializer;
 
-    public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer, \Symfony\Component\Serializer\SerializerInterface $symSerializer)
+    public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer)
     {
         $this->feedItemRepository = $feedItemRepository;
-        $this->serializer = $serializer;
-        $this->symSerializer = $symSerializer;
+        $this->serializer         = $serializer;
     }
 
     /**
@@ -56,14 +54,8 @@ class ReaderController extends AbstractController
     {
         $feedItems = $this->feedItemRepository->findAllForUserPaginated($this->getUser(), [], 1, 10);
 
-        $response = JsonResponse::create();
+        $response          = JsonResponse::create();
         $normalizerOptions = ['ignored_attributes' => ['feed']];
-
-//        $response->setJson($this->serializer->serialize($feedItems->getItems(), 'json', [
-//            'ignored_attributes' => ['feed']
-//        ]));
-
-//        dd($this->serializer->serialize($feedItems, 'json'));
 
         $response->setJson($this->symSerializer->serialize($feedItems, 'json', $normalizerOptions));
 

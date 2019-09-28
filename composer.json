@@ -9,7 +9,6 @@
         "debril/rss-atom-bundle": "^5.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",
-        "jms/serializer-bundle": "^3.4",
         "knplabs/knp-paginator-bundle": "^4.0",
         "ramsey/uuid": "^3.8",
         "sensio/framework-extra-bundle": "^5.4",

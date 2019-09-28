@@ -198,7 +198,10 @@ class Processor
             $response = $promiseResult['value'];
 
             $rawContents = $response->getBody()->getContents();
-            $content     = json_decode($rawContents)->content ?? '';
+            $decoded     = json_decode($rawContents);
+
+            $content = $decoded->content ?? '';
+            $excerpt = $decoded->excerpt ?? $rawFeedItem->getDescription();
 
             if ($content === '') {
                 $this->logger->warning(sprintf('Empty readability response for %s', $rawFeedItem->getLink()), [
@@ -212,7 +215,7 @@ class Processor
             $feedItem = (new FeedItem())
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
-                ->setExcerpt($rawFeedItem->getDescription())
+                ->setExcerpt($excerpt)
                 ->setDescription($content)
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified())

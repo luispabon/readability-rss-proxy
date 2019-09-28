@@ -8,30 +8,31 @@
 
     <script type="text/javascript">
       const container = $('#items_container')
+
+      function makeItem (feedItem) {
+        const header      = $('<a></a>').attr('class', 'header').text(feedItem.title)
+        const image       = $('<div></div>').attr('class', 'image').append($('<img/>').attr('src', '/images/placeholder_image.png'))
+        const meta        = $('<div></div>').attr('class', 'meta').text(feedItem.feed_title)
+        const description = $('<div></div>').attr('class', 'description').append($.parseHTML(feedItem.excerpt))
+        const extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
+
+        const content = $('<div></div>').attr('class', 'content')
+          .append(header)
+          .append(meta)
+          .append(description)
+          .append(extra)
+
+        return $('<div></div>').attr('class', 'item')
+          .append(image)
+          .append(content)
+      }
+
       $.ajax({
         type: 'GET',
         url: '{{ path('reader_index_json', {'page': 1}) }}',
         success: function (data) {
-          data.items.forEach((item) => {
-            let header      = $('<a></a>').attr('class', 'header').text(item.title)
-            let image       = $('<div></div>').attr('class', 'image').append($('<img/>').attr('src', '/images/placeholder_image.png'))
-            let meta        = $('<div></div>').attr('class', 'meta').text(item.feed_title)
-            let description = $('<div></div>').attr('class', 'description').append($.parseHTML(item.excerpt))
-            let extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
-
-            let content = $('<div></div>').attr('class', 'content')
-              .append(header)
-              .append(meta)
-              .append(description)
-              .append(extra)
-
-            let feedItem = $('<div></div>').attr('class', 'item')
-
-            feedItem
-              .append(image)
-              .append(content)
-
-            container.append(feedItem)
+          data.items.forEach((feedItem) => {
+            container.append(makeItem(feedItem))
           })
         }
       })

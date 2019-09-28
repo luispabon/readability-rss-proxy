@@ -18,18 +18,11 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ReaderController extends AbstractController
 {
-    /**
-     * @var FeedItemRepository
-     */
+    /** @var FeedItemRepository */
     private $feedItemRepository;
-    /**
-     * @var SerializerInterface
-     */
+
+    /** @var SerializerInterface */
     private $serializer;
-    /**
-     * @var SerializerInterface
-     */
-    private $symSerializer;
 
     public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer)
     {
@@ -42,9 +35,7 @@ class ReaderController extends AbstractController
      */
     public function reader(): Response
     {
-        return $this->render('reader/index.html.twig', [
-            'feedItems' => '',
-        ]);
+        return $this->render('reader/index.html.twig');
     }
 
     /**
@@ -57,7 +48,7 @@ class ReaderController extends AbstractController
         $response          = JsonResponse::create();
         $normalizerOptions = ['ignored_attributes' => ['feed']];
 
-        $response->setJson($this->symSerializer->serialize($feedItems, 'json', $normalizerOptions));
+        $response->setJson($this->serializer->serialize($feedItems, 'json', $normalizerOptions));
 
         return $response;
     }

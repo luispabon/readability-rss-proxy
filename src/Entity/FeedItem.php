@@ -5,7 +5,6 @@ namespace App\Entity;
 
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FeedItemRepository")
@@ -45,8 +44,6 @@ class FeedItem
      *
      * @ORM\ManyToOne(targetEntity="Feed", inversedBy="feedItems")
      * @ORM\JoinColumn(name="feed_id", referencedColumnName="id", nullable=false)
-     *
-     * @Serializer\Exclude()
      */
     private $feed;
 

@@ -1,7 +1,30 @@
 {% extends 'reader/reader_base.html.twig' %}
 
 {% block body %}
+    <div id="items_container"></div>
 
-{#    {{ feedItems|vardumper }}#}
+    <script type="text/javascript">
+      const container = $('#items_container')
+      $.ajax({
+        type: 'GET',
+        url: '{{ path('reader_index_json', {'page': 1}) }}',
+        success: function (data) {
+          let feedItem
+          let header
+          let excerpt
+          data.items.forEach((item) => {
+            feedItem = $('<div></div>').attr('class', 'feed_item')
+            header   = $('<h1></h1>').text(item.title)
+            excerpt  = $('<div></div>').append($.parseHTML(item.description))
 
+            feedItem
+              .append(header)
+              .append(excerpt)
+              .append($('<hr/>'))
+
+            container.append(feedItem)
+          })
+        }
+      })
+    </script>
 {% endblock %}

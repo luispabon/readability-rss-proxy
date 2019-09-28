@@ -8,13 +8,11 @@
         </div>
         <p></p>
     </div>
-    <<div id="items_container" class="ui items"></div>
-
-
-
+    <div id="items_container" class="ui items"></div>
 
     <script type="text/javascript">
       const container = $('#items_container')
+      let currentPage = 1
 
       function makeItem (feedItem) {
         const header = $('<a></a>').attr('class', 'header').text(feedItem.title)
@@ -41,6 +39,16 @@
           .append(content)
       }
 
+      // Configure all images to lazy-load
+      function setImageLazyLoading () {
+        $('#items_container.items .image img')
+          .visibility({
+            type: 'image',
+            transition: 'fade in',
+            duration: 1000
+          })
+      }
+
       // Initial feed items load
       $.ajax({
         type: 'GET',
@@ -48,19 +56,46 @@
         success: function (data) {
           data.items.forEach((feedItem) => {
             container.append(makeItem(feedItem))
-
-            // Configure all images to lazy-load
-            $('#items_container.items .image img')
-              .visibility({
-                type: 'image',
-                transition: 'fade in',
-                duration: 1000
-              })
-
-            // Everything ready, remove loading screen
-            $('#loader').remove()
           })
+
+          setImageLazyLoading()
+
+          currentPage++
+
+          // Everything ready, remove loading screen
+          $('#loader').remove()
         }
       })
+
+      // Infinite scrolling
+      let stopLoadingContent = false
+      container
+        .visibility({
+          once: false,
+          // update size when new content loads
+          observeChanges: true,
+          // load content on bottom edge visible
+          onBottomVisible: function () {
+            if (stopLoadingContent === false) {
+              $.ajax({
+                type: 'GET',
+                url: '{{ path('reader_index') }}' + currentPage,
+                success: function (data) {
+                  data.items.forEach((feedItem) => {
+                    container.append(makeItem(feedItem))
+                  })
+
+                  setImageLazyLoading()
+                  currentPage++
+
+                  // Stop trying to ask the server for moar data when we reach the end
+                  if (data.paginator.currentPage === data.paginator.numPages) {
+                    stopLoadingContent = true
+                  }
+                }
+              })
+            }
+          }
+        })
     </script>
 {% endblock %}

@@ -47,7 +47,7 @@ class ReaderController extends AbstractController
             $this->getUser(),
             ['fi.lastModified DESC'],
             $page,
-            20
+            30
         );
 
         $response          = JsonResponse::create();

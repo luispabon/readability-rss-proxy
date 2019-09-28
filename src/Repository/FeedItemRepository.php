@@ -5,12 +5,15 @@ namespace App\Repository;
 
 use App\Entity\Feed;
 use App\Entity\FeedItem;
+use App\Entity\PaginatedFeedItems;
 use App\Entity\RssUser;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method FeedItem|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,9 +23,16 @@ use Doctrine\ORM\Query\Expr\Join;
  */
 class FeedItemRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, FeedItem::class);
+
+        $this->paginator = $paginator;
     }
 
     public function save(FeedItem $feedItem): void
@@ -58,7 +68,7 @@ class FeedItemRepository extends ServiceEntityRepository
                 ->where('fi.link = :link')
                 ->andWhere('fi.feed = :feed_id')
                 ->setParameters([
-                    ':link' => $feedItemLink,
+                    ':link'    => $feedItemLink,
                     ':feed_id' => $feed->getId(),
                 ])
                 ->getQuery()
@@ -66,14 +76,14 @@ class FeedItemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return FeedItem[]
+     * @return PaginationInterface
      */
     public function findAllForUserPaginated(
         RssUser $user,
         array $sortCriteria = [],
-        int $page = 0,
+        int $page = 1,
         int $perPage = 10
-    ): array {
+    ): PaginatedFeedItems {
         $queryBuilder = $this->createQueryBuilder('fi');
 
         $queryBuilder
@@ -85,6 +95,6 @@ class FeedItemRepository extends ServiceEntityRepository
             $queryBuilder->orderBy($column, $direction);
         }
 
-        return $queryBuilder->getQuery()->getResult(AbstractQuery::HYDRATE_SIMPLEOBJECT);
+        return new PaginatedFeedItems($this->paginator->paginate($queryBuilder->getQuery(), $page, $perPage));
     }
 }

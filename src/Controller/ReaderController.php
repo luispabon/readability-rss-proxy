@@ -45,7 +45,7 @@ class ReaderController extends AbstractController
     {
         $feedItems = $this->feedItemRepository->findAllForUserPaginated(
             $this->getUser(),
-            [],
+            ['fi.lastModified DESC'],
             $page,
             20
         );

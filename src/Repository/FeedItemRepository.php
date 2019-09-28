@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query\Expr\Join;
 use App\Entity\Feed;
 use App\Entity\FeedItem;
 use App\Entity\RssUser;
@@ -11,6 +10,7 @@ use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method FeedItem|null find($id, $lockMode = null, $lockVersion = null)
@@ -58,7 +58,7 @@ class FeedItemRepository extends ServiceEntityRepository
                 ->where('fi.link = :link')
                 ->andWhere('fi.feed = :feed_id')
                 ->setParameters([
-                    ':link'    => $feedItemLink,
+                    ':link' => $feedItemLink,
                     ':feed_id' => $feed->getId(),
                 ])
                 ->getQuery()
@@ -68,8 +68,12 @@ class FeedItemRepository extends ServiceEntityRepository
     /**
      * @return FeedItem[]
      */
-    public function findAllForUser(RssUser $user, array $sortCriteria = [], int $page = 0, int $perPage = 10): array
-    {
+    public function findAllForUserPaginated(
+        RssUser $user,
+        array $sortCriteria = [],
+        int $page = 0,
+        int $perPage = 10
+    ): array {
         $queryBuilder = $this->createQueryBuilder('fi');
 
         $queryBuilder

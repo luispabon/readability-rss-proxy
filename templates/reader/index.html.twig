@@ -1,22 +1,37 @@
 {% extends 'reader/reader_base.html.twig' %}
 
 {% block body %}
-    <div class="ui vertical inverted sidebar menu" id="toc">
-    </div>
+
     <div class="ui" id="loader">
         <div class="ui active inverted dimmer">
             <div class="ui text loader">Loading</div>
         </div>
         <p></p>
     </div>
-    <div id="items_container" class="ui items"></div>
+    <div class="ui grid">
+        <div class="one wide">
+            <div id="items_container" class="ui items"></div>
+        </div>
+        <div class="two wide">
+            asdasd
+        </div>
+    </div>
+
+
 
     <script type="text/javascript">
       const container = $('#items_container')
 
       function makeItem (feedItem) {
-        const header      = $('<a></a>').attr('class', 'header').text(feedItem.title)
-        const image       = $('<div></div>').attr('class', 'image').append($('<img/>').attr('src', '/images/placeholder_image.png'))
+        const header = $('<a></a>').attr('class', 'header').text(feedItem.title)
+
+        const imageItem = $('<img/>').attr('src', '/images/placeholder_image.png')
+        if (feedItem.image !== null && feedItem.image !== '') {
+          imageItem.attr('data-src', feedItem.image)
+        }
+
+        const image = $('<div></div>').attr('class', 'image').append(imageItem)
+
         const meta        = $('<div></div>').attr('class', 'meta').text(feedItem.feed_title)
         const description = $('<div></div>').attr('class', 'description').append($.parseHTML(feedItem.excerpt))
         const extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
@@ -32,17 +47,26 @@
           .append(content)
       }
 
+      // Initial feed items load
       $.ajax({
         type: 'GET',
         url: '{{ path('reader_index_json', {'page': 1}) }}',
         success: function (data) {
           data.items.forEach((feedItem) => {
             container.append(makeItem(feedItem))
+
+            // Configure all images to lazy-load
+            $('#items_container.items .image img')
+              .visibility({
+                type: 'image',
+                transition: 'fade in',
+                duration: 1000
+              })
+
+            // Everything ready, remove loading screen
             $('#loader').remove()
           })
         }
       })
-
-
     </script>
 {% endblock %}

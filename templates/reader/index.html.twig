@@ -10,10 +10,24 @@
     </div>
     <div id="items_container" class="ui items"></div>
 
+    <div id="endOfPageMessage" class="ui message hidden">
+        <div class="header">
+            No more content!
+        </div>
+        You'll get more soon enough.
+    </div>
+
     <script type="text/javascript">
       const container = $('#items_container')
       let currentPage = 1
 
+      function formatDate (dateString) {
+        const dateToFormat = new Date(dateString)
+
+        return dateToFormat.toLocaleDateString() + ', ' + dateToFormat.getHours() + ':' + dateToFormat.getMinutes()
+      }
+
+      // Given a feed item from the api, build its node and add it for display
       function makeItem (feedItem) {
         const header = $('<a></a>').attr('class', 'header').text(feedItem.title)
 
@@ -24,7 +38,9 @@
 
         const image = $('<div></div>').attr('class', 'image').append(imageItem)
 
-        const meta        = $('<div></div>').attr('class', 'meta').text(feedItem.feed_title)
+        const metaText = feedItem.feed_title + ' - ' + formatDate(feedItem.last_modified)
+        const meta     = $('<div></div>').attr('class', 'meta').text(metaText)
+
         const description = $('<div></div>').attr('class', 'description').append($.parseHTML(feedItem.excerpt))
         const extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
 
@@ -76,7 +92,9 @@
           observeChanges: true,
           // load content on bottom edge visible
           onBottomVisible: function () {
-            if (stopLoadingContent === false) {
+            // Do not load content if we've flipped the stopLoadingContent flag
+            // Also, this event triggers on page load, so we need to avoid loading page 1 twice
+            if (stopLoadingContent === false && currentPage > 1) {
               $.ajax({
                 type: 'GET',
                 url: '{{ path('reader_index') }}' + currentPage,
@@ -91,6 +109,7 @@
                   // Stop trying to ask the server for moar data when we reach the end
                   if (data.paginator.currentPage === data.paginator.numPages) {
                     stopLoadingContent = true
+                    $('#endOfPageMessage').attr('class', 'ui warning message ')
                   }
                 }
               })

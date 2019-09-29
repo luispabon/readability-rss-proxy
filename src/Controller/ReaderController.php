@@ -41,7 +41,7 @@ class ReaderController extends AbstractController
     /**
      * @Route("/{page}", requirements={"page"="\d+"}, name="reader_index_json", methods={"GET"}, format="json")
      */
-    public function listFeedItems(int $page): Response
+    public function listFeedItems(int $page): JsonResponse
     {
         $feedItems = $this->feedItemRepository->findAllForUserPaginated(
             $this->getUser(),
@@ -50,9 +50,27 @@ class ReaderController extends AbstractController
             30
         );
 
-        $response          = JsonResponse::create();
         $normalizerOptions = ['ignored_attributes' => ['feed']];
 
-        return $response->setJson($this->serializer->serialize($feedItems, 'json', $normalizerOptions));
+        return (new JsonResponse())->setJson($this->serializer->serialize($feedItems, 'json', $normalizerOptions));
+    }
+
+    /**
+     * @Route("/item/{id}", requirements={"page"="\d+"}, name="reader_get_item", methods={"GET"}, format="json")
+     */
+    public function getFeedItem(int $id): JsonResponse
+    {
+        $feedItem = $this->feedItemRepository->find($id);
+
+        $response = new JsonResponse();
+        if ($feedItem === null) {
+            return $response
+                ->setData(['error' => 'Feed item not found'])
+                ->setStatusCode(404);
+        }
+
+        $normalizerOptions = ['ignored_attributes' => ['feed']];
+
+        return $response->setJson($this->serializer->serialize($feedItem, 'json', $normalizerOptions));
     }
 }

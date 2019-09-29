@@ -4,14 +4,11 @@
 
     <div class="ui segment">
         <div class="ui two column very relaxed grid">
-            <div class="column scrolling content"">
+            <div class="column scrolling content">
                 <div id="items_container" class="ui items "></div>
             </div>
-            <div class="column">
-                <p></p>
-                <p></p>
-                <p></p>
-                <p></p>
+            <div class="column" id="article">
+
             </div>
         </div>
         <div class="ui vertical divider"></div>
@@ -33,7 +30,9 @@
     </div>
 
     <script type="text/javascript">
-      const container = $('#items_container')
+      const container        = $('#items_container')
+      const articleContainer = $('#article')
+
       let currentPage = 1
 
       function formatDate (dateString) {
@@ -43,7 +42,7 @@
       }
 
       // Given a feed item from the api, build its node and add it for display
-      function makeItem (feedItem) {
+      function listItem (feedItem) {
         const header = $('<a></a>').attr('class', 'header').text(feedItem.title)
 
         const imageItem = $('<img/>').attr('src', '/images/placeholder_image.png')
@@ -65,9 +64,13 @@
           .append(description)
           .append(extra)
 
-        return $('<div></div>').attr('class', 'item')
+        const newsItem = $('<div></div>').attr('class', 'item').attr('onclick', 'renderFeedItem(' + feedItem.id + ')')
           .append(image)
           .append(content)
+
+        return newsItem
+
+        // return $('<a></a>').attr('onclick', 'renderFeedItem(' + feedItem.id + ')').append(newsItem)
       }
 
       // Configure all images to lazy-load
@@ -86,10 +89,12 @@
         url: '{{ path('reader_index_json', {'page': 1}) }}',
         success: function (data) {
           data.items.forEach((feedItem) => {
-            container.append(makeItem(feedItem))
+            container.append(listItem(feedItem))
           })
 
           setImageLazyLoading()
+
+          renderFeedItem(data.items[0].id)
 
           currentPage++
 
@@ -115,7 +120,7 @@
                 url: '{{ path('reader_index') }}' + currentPage,
                 success: function (data) {
                   data.items.forEach((feedItem) => {
-                    container.append(makeItem(feedItem))
+                    container.append(listItem(feedItem))
                   })
 
                   setImageLazyLoading()
@@ -131,5 +136,29 @@
             }
           }
         })
+
+      // Renders a single feed item into the article view
+      function renderFeedItem (id) {
+        // Initial feed items load
+        $.ajax({
+          type: 'GET',
+          url: '/reader/item/' + id,
+          success: function (feedItem) {
+            const header = $('<h2></h2>').text(feedItem.title)
+            const more   = $('<a></a>')
+              .attr('src', feedItem.link)
+              .attr('class', 'ui primary button')
+              .attr('target', '_blank')
+              .text('Original article')
+
+            articleContainer
+              .empty()
+              .append(header)
+              .append($.parseHTML(feedItem.description))
+              .append(more)
+          }
+        })
+      }
+
     </script>
 {% endblock %}

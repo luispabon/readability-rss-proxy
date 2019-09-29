@@ -64,13 +64,11 @@
           .append(description)
           .append(extra)
 
-        const newsItem = $('<div></div>').attr('class', 'item').attr('onclick', 'renderFeedItem(' + feedItem.id + ')')
+        return newsItem = $('<div></div>')
+          .attr('class', 'item')
+          .attr('onclick', 'renderFeedItem(' + feedItem.id + ')')
           .append(image)
           .append(content)
-
-        return newsItem
-
-        // return $('<a></a>').attr('onclick', 'renderFeedItem(' + feedItem.id + ')').append(newsItem)
       }
 
       // Configure all images to lazy-load

@@ -1,5 +1,35 @@
+#### Namespace to place everything in ####
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: rss-proxy
+  labels:
+    name: rss-proxy
+
+---
+
 #### RSS Proxy website ###
 
+# These should contain your app secrets
+# app.secret is a random string used to generate tokens used for login, forms, etc
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: rss-proxy
+  namespace: rss-proxy
+data:
+  db.user: BASE64_ENCODED_DATABASE_USERNAME
+  db.name: BASE64_ENCODED_DATABASE_NAME
+  db.password: BASE64_DATABASE_PASSWORD
+  app.secret: BASE64_ENCODED_RANDOM_STRING
+
+---
+
+# This is the point of entry to the site. You must configure an ingress to point here, preferably one that does
+# ssl termination. It should point to rss-proxy.rss-proxy.svc.cluster.local (service_name.namespace.svc.cluster.local is
+# the standard cross-namespace dns schema in k8s)
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,6 +47,10 @@ spec:
 
 ---
 
+# Currently, database migrations only support postgres - will be fixing this
+# Within postgres, any version higher than 9.6 will work just fine
+# Cache prefix is used on cache keys, useful if you're sharing a redis instance with something else or if you
+# want to bust the cache after a deployment by using a new one
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -34,6 +68,9 @@ data:
 
 ---
 
+# This is the site's deployment. It comprises of 3 containers:
+# The init container always runs migrations
+# The normal containers are: nginx ( containing frontend code and fcgi point of entrance for php) and php-fpm
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -217,7 +254,9 @@ spec:
               value: http://readability-js-server:3000
 
 ---
+#### REDIS ####
 
+# Internal service for redis
 apiVersion: v1
 kind: Service
 metadata:
@@ -235,6 +274,7 @@ spec:
 
 ---
 
+# Our redis needs aren't great. We're using it for some database caches, but crucially, we're using it for sessions
 apiVersion: apps/v1
 kind: Deployment
 metadata:

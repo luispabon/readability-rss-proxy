@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6467e6914ac211f8eb8fed64a75f2a5",
+    "content-hash": "39569bc210525750c078c3fe640306e3",
     "packages": [
         {
             "name": "debril/feed-io",
@@ -5948,6 +5948,56 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "amnuts/opcache-gui",
+            "version": "v2.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amnuts/opcache-gui.git",
+                "reference": "22d360c359bd493737723b879d10ef9a2343fa6c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amnuts/opcache-gui/zipball/22d360c359bd493737723b879d10ef9a2343fa6c",
+                "reference": "22d360c359bd493737723b879d10ef9a2343fa6c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zend-opcache": "*",
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OpcacheGui\\": "/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrew Collington",
+                    "email": "andy@amnuts.com",
+                    "homepage": "http://www.amnuts.com/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/amnuts/opcache-gui/graphs/contributors"
+                }
+            ],
+            "description": "A clean, effective and responsive interface for Zend OPcache, with real(ish)-time monitoring, filtering and the ability to invalidate files",
+            "keywords": [
+                "Opcache",
+                "cache",
+                "gui",
+                "interface",
+                "opcodes"
+            ],
+            "time": "2019-07-13T16:26:40+00:00"
+        },
         {
             "name": "doctrine/data-fixtures",
             "version": "v1.3.2",

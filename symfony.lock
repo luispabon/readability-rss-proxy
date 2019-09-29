@@ -1,4 +1,7 @@
 {
+    "amnuts/opcache-gui": {
+        "version": "v2.5.0"
+    },
     "andreskrey/readability.php": {
         "version": "v2.1.0"
     },

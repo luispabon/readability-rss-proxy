@@ -146,7 +146,7 @@
           success: function (feedItem) {
             const header = $('<h2></h2>').text(feedItem.title)
             const more   = $('<a></a>')
-              .attr('src', feedItem.link)
+              .attr('href', feedItem.link)
               .attr('class', 'ui primary button')
               .attr('target', '_blank')
               .text('Original article')

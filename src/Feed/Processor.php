@@ -198,7 +198,10 @@ class Processor
             $response = $promiseResult['value'];
 
             $rawContents = $response->getBody()->getContents();
-            $content     = json_decode($rawContents)->content ?? '';
+            $decoded     = json_decode($rawContents);
+
+            $content = $decoded->content ?? '';
+            $excerpt = $decoded->excerpt ?? $rawFeedItem->getDescription();
 
             if ($content === '') {
                 $this->logger->warning(sprintf('Empty readability response for %s', $rawFeedItem->getLink()), [
@@ -212,7 +215,9 @@ class Processor
             $feedItem = (new FeedItem())
                 ->setFeed($feed)
                 ->setTitle($rawFeedItem->getTitle())
+                ->setExcerpt($excerpt)
                 ->setDescription($content)
+                ->setImage($this->getFirstImageFromStringsFilter($content))
                 ->setLink($rawFeedItem->getLink())
                 ->setLastModified($rawFeedItem->getLastModified())
                 ->setCreatedAt(new DateTime());
@@ -243,5 +248,17 @@ class Processor
         }
 
         return null;
+    }
+
+    /**
+     * Finds and returns the first image link found on a list of strings. If any, that is
+     */
+    public function getFirstImageFromStringsFilter(string $content): ?string
+    {
+        $regexp  = '/(http(s?):)([\/|.|\w|\s|-])*\.(?:jpg|gif|png)/i';
+        $matches = [];
+        preg_match($regexp, $content, $matches);
+
+        return $matches[0] ?? null;
     }
 }

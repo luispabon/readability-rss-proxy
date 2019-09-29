@@ -1,0 +1,162 @@
+{% extends 'reader/reader_base.html.twig' %}
+
+{% block body %}
+
+    <div class="ui segment">
+        <div class="ui two column very relaxed grid">
+            <div class="column scrolling content">
+                <div id="items_container" class="ui items "></div>
+            </div>
+            <div class="column" id="article">
+
+            </div>
+        </div>
+        <div class="ui vertical divider"></div>
+    </div>
+
+    <div class="ui" id="loader">
+        <div class="ui active inverted dimmer">
+            <div class="ui text loader">Loading</div>
+        </div>
+        <p></p>
+    </div>
+
+
+    <div id="endOfPageMessage" class="ui message hidden">
+        <div class="header">
+            No more content!
+        </div>
+        You'll get more soon enough.
+    </div>
+
+    <script type="text/javascript">
+      const container        = $('#items_container')
+      const articleContainer = $('#article')
+
+      let currentPage = 1
+
+      function formatDate (dateString) {
+        const dateToFormat = new Date(dateString)
+
+        return dateToFormat.toLocaleDateString() + ', ' + dateToFormat.getHours() + ':' + dateToFormat.getMinutes()
+      }
+
+      // Given a feed item from the api, build its node and add it for display
+      function listItem (feedItem) {
+        const header = $('<a></a>').attr('class', 'header').text(feedItem.title)
+
+        const imageItem = $('<img/>').attr('src', '/images/placeholder_image.png')
+        if (feedItem.image !== null && feedItem.image !== '') {
+          imageItem.attr('data-src', feedItem.image)
+        }
+
+        const image = $('<div></div>').attr('class', 'image').append(imageItem)
+
+        const metaText = feedItem.feed_title + ' - ' + formatDate(feedItem.last_modified)
+        const meta     = $('<div></div>').attr('class', 'meta').text(metaText)
+
+        const description = $('<div></div>').attr('class', 'description').append($.parseHTML(feedItem.excerpt))
+        const extra       = $('<div></div>').attr('class', 'extra').append($('<a>').attr('src', '#').text('More...'))
+
+        const content = $('<div></div>').attr('class', 'content')
+          .append(header)
+          .append(meta)
+          .append(description)
+          .append(extra)
+
+        return newsItem = $('<div></div>')
+          .attr('class', 'item')
+          .attr('onclick', 'renderFeedItem(' + feedItem.id + ')')
+          .append(image)
+          .append(content)
+      }
+
+      // Configure all images to lazy-load
+      function setImageLazyLoading () {
+        $('#items_container.items .image img')
+          .visibility({
+            type: 'image',
+            transition: 'fade in',
+            duration: 1000
+          })
+      }
+
+      // Initial feed items load
+      $.ajax({
+        type: 'GET',
+        url: '{{ path('reader_index_json', {'page': 1}) }}',
+        success: function (data) {
+          data.items.forEach((feedItem) => {
+            container.append(listItem(feedItem))
+          })
+
+          setImageLazyLoading()
+
+          renderFeedItem(data.items[0].id)
+
+          currentPage++
+
+          // Everything ready, remove loading screen
+          $('#loader').remove()
+        }
+      })
+
+      // Infinite scrolling
+      let stopLoadingContent = false
+      container
+        .visibility({
+          once: false,
+          // update size when new content loads
+          observeChanges: true,
+          // load content on bottom edge visible
+          onBottomVisible: function () {
+            // Do not load content if we've flipped the stopLoadingContent flag
+            // Also, this event triggers on page load, so we need to avoid loading page 1 twice
+            if (stopLoadingContent === false && currentPage > 1) {
+              $.ajax({
+                type: 'GET',
+                url: '{{ path('reader_index') }}' + currentPage,
+                success: function (data) {
+                  data.items.forEach((feedItem) => {
+                    container.append(listItem(feedItem))
+                  })
+
+                  setImageLazyLoading()
+                  currentPage++
+
+                  // Stop trying to ask the server for moar data when we reach the end
+                  if (data.paginator.currentPage === data.paginator.numPages) {
+                    stopLoadingContent = true
+                    $('#endOfPageMessage').attr('class', 'ui warning message ')
+                  }
+                }
+              })
+            }
+          }
+        })
+
+      // Renders a single feed item into the article view
+      function renderFeedItem (id) {
+        // Initial feed items load
+        $.ajax({
+          type: 'GET',
+          url: '/reader/item/' + id,
+          success: function (feedItem) {
+            const header = $('<h2></h2>').text(feedItem.title)
+            const more   = $('<a></a>')
+              .attr('href', feedItem.link)
+              .attr('class', 'ui primary button')
+              .attr('target', '_blank')
+              .text('Original article')
+
+            articleContainer
+              .empty()
+              .append(header)
+              .append($.parseHTML(feedItem.description))
+              .append(more)
+          }
+        })
+      }
+
+    </script>
+{% endblock %}

@@ -40,6 +40,6 @@ services:
             - ./infrastructure/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
 
     readability-js-server:
-        image: phpdockerio/readability-js-server
+        image: phpdockerio/readability-js-server:1.0
         ports:
           - "7001:3000"

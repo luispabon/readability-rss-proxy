@@ -3,13 +3,17 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-//use App\Entity\Feed;
 use App\Entity\Feed;
 use App\Entity\FeedItem;
+use App\Entity\PaginatedFeedItems;
+use App\Entity\RssUser;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr\Join;
+use Knp\Component\Pager\Pagination\PaginationInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @method FeedItem|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,9 +23,16 @@ use Doctrine\ORM\AbstractQuery;
  */
 class FeedItemRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    /**
+     * @var PaginatorInterface
+     */
+    private $paginator;
+
+    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {
         parent::__construct($registry, FeedItem::class);
+
+        $this->paginator = $paginator;
     }
 
     public function save(FeedItem $feedItem): void
@@ -62,5 +73,34 @@ class FeedItemRepository extends ServiceEntityRepository
                 ])
                 ->getQuery()
                 ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR) > 0;
+    }
+
+    /**
+     * @param RssUser $user
+     * @param array   $sortCriteria Example: ['title DESC', 'lastModified ASC']
+     * @param int     $page
+     * @param int     $perPage
+     *
+     * @return PaginatedFeedItems
+     */
+    public function findAllForUserPaginated(
+        RssUser $user,
+        array $sortCriteria = [],
+        int $page = 1,
+        int $perPage = 10
+    ): PaginatedFeedItems {
+        $queryBuilder = $this->createQueryBuilder('fi');
+
+        $queryBuilder
+            ->select('fi.id, fi.title, fi.excerpt, fi.image, fi.lastModified as last_modified, f.title as feed_title')
+            ->innerJoin(Feed::class, 'f', Join::WITH, 'f.id = fi.feed')
+            ->where('f.rssUser = :user_id')
+            ->setParameter(':user_id', $user->getId());
+
+        foreach ($sortCriteria as $criterion) {
+            $queryBuilder->add('orderBy', $criterion);
+        }
+
+        return new PaginatedFeedItems($this->paginator->paginate($queryBuilder->getQuery(), $page, $perPage));
     }
 }

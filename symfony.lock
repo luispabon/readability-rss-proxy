@@ -1,4 +1,7 @@
 {
+    "amnuts/opcache-gui": {
+        "version": "v2.5.0"
+    },
     "andreskrey/readability.php": {
         "version": "v2.1.0"
     },
@@ -136,6 +139,12 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "knplabs/knp-components": {
+        "version": "v2.2.0"
+    },
+    "knplabs/knp-paginator-bundle": {
+        "version": "v4.0.0"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },
@@ -147,6 +156,15 @@
     },
     "ocramius/proxy-manager": {
         "version": "2.2.3"
+    },
+    "phpdocumentor/reflection-common": {
+        "version": "2.0.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "4.3.2"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.0.1"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -341,6 +359,9 @@
     "symfony/property-access": {
         "version": "v4.3.4"
     },
+    "symfony/property-info": {
+        "version": "v4.3.4"
+    },
     "symfony/psr-http-message-bridge": {
         "version": "v1.2.0"
     },
@@ -383,11 +404,30 @@
     "symfony/security-http": {
         "version": "v4.3.4"
     },
+    "symfony/serializer": {
+        "version": "v4.3.4"
+    },
+    "symfony/serializer-pack": {
+        "version": "v1.0.2"
+    },
     "symfony/service-contracts": {
         "version": "v1.1.6"
     },
     "symfony/stopwatch": {
         "version": "v4.3.4"
+    },
+    "symfony/translation": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v1.1.6"
@@ -459,6 +499,9 @@
     },
     "twig/twig": {
         "version": "v2.11.3"
+    },
+    "webmozart/assert": {
+        "version": "1.5.0"
     },
     "zendframework/zend-code": {
         "version": "3.3.2"

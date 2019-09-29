@@ -259,6 +259,6 @@ class Processor
         $matches = [];
         preg_match($regexp, $content, $matches);
 
-        return count($matches) > 0 ? $matches[0] : null;
+        return $matches[0] ?? null;
     }
 }

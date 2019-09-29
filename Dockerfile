@@ -80,3 +80,4 @@ RUN sed -i "s/php-fpm/localhost/g"       /etc/nginx/conf.d/default.conf; \
 
 COPY public/favicon.ico ./public/
 COPY public/js          ./public/js
+COPY public/images      ./public/images

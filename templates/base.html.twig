@@ -89,7 +89,7 @@
 <body>
 <div class="ui">
     {% if app.user and embedded == false %}
-        <div class="ui attached inverted menu">
+        <div class="ui attached inverted menu" id="menu">
             <a class="item {% block reader_section_active %}{% endblock %}" href="{{ path('reader_index') }}">
                 <i class="book icon"></i> Reader
             </a>

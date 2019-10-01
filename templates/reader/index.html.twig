@@ -1,10 +1,10 @@
 {% extends 'reader/reader_base.html.twig' %}
 
 {% block body %}
-    <div class="ui segment">
+    <div class="ui segment" id="top_container">
         <div class="ui two column very relaxed grid">
-            <div id="items_container" class="ui column items"></div>
-            <div class="column" id="article"></div>
+            <div id="items_container" class="ui column items scrolled" style="overflow: auto"></div>
+            <div class="column scrolled" id="article" style="overflow: auto"></div>
         </div>
         <div class="ui vertical divider"></div>
     </div>
@@ -28,6 +28,12 @@
     <script type="text/javascript">
       const container        = $('#items_container')
       const articleContainer = $('#article')
+
+      // Init scrolled content
+      const maxHeight = window.innerHeight - $('#menu').height() - 100
+      // $('#top_container').attr('style', 'max-height: ' + maxHeight + 'px; overflow: auto')
+      container.attr('style', 'max-height: ' + maxHeight + 'px; overflow: auto')
+      articleContainer.attr('style', 'max-height: ' + maxHeight + 'px; overflow: auto')
 
       let currentPage = 1
 

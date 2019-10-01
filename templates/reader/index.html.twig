@@ -1,19 +1,15 @@
 {% extends 'reader/reader_base.html.twig' %}
 
 {% block body %}
-
     <div class="ui segment">
         <div class="ui two column very relaxed grid">
-            <div class="column scrolling content">
-                <div id="items_container" class="ui items "></div>
-            </div>
-            <div class="column" id="article">
-
-            </div>
+            <div id="items_container" class="ui column items"></div>
+            <div class="column" id="article"></div>
         </div>
         <div class="ui vertical divider"></div>
     </div>
 
+    <!-- Loader, hides upon article load -->
     <div class="ui" id="loader">
         <div class="ui active inverted dimmer">
             <div class="ui text loader">Loading</div>
@@ -21,7 +17,7 @@
         <p></p>
     </div>
 
-
+    <!-- End of infinite scrolling -->
     <div id="endOfPageMessage" class="ui message hidden">
         <div class="header">
             No more content!

@@ -11,9 +11,9 @@ use DateInterval;
 use DateTime;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
-use FeedIo\Feed\Node\Element as NodeElement;
 use FeedIo\FeedInterface;
 use FeedIo\FeedIo;
+use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\Promise;
 use Psr\Http\Message\ResponseInterface;
@@ -91,7 +91,16 @@ class Processor
                 $updateFrom->sub(new DateInterval('PT2H'));
             }
 
-            $feedContents = $this->feedIo->read($feed->getFeedUrl(), null, $updateFrom)->getFeed();
+            try {
+                $feedContents = $this->feedIo->read($feed->getFeedUrl(), null, $updateFrom)->getFeed();
+            } catch (ReadErrorException $ex) {
+                $this->logger->critical(
+                    sprintf('Error reading feed %s: %s', $feed->getFeedUrl(), $ex->getMessage()),
+                    ['exception' => $ex]
+                );
+
+                continue;
+            }
 
             // Last modified can come sometimes as the epoch - correct that shit
             $lastMod = $feedContents

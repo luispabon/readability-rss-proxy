@@ -58,7 +58,8 @@ class FeedProxyController extends AbstractController
             ->setDescription($feed->getDescription())
             ->setLastModified($feed->getLastModified())
             ->setPublicId($this->removeQueryFromUrl($feed->getFeedUrl()))
-            ->setLink($feed->getFeedUrl());
+            ->setLink($feed->getFeedUrl())
+            ->setLogo($feed->getIcon());
 
         foreach ($feed->getFeedItems() as $feedItem) {
             $formattedItem = (new Item())

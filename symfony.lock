@@ -5,6 +5,9 @@
     "andreskrey/readability.php": {
         "version": "v2.1.0"
     },
+    "arthurhoaro/favicon": {
+        "version": "v1.2.2"
+    },
     "debril/feed-io": {
         "version": "v4.3.9"
     },

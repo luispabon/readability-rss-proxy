@@ -9,6 +9,7 @@ use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
 use DateInterval;
 use DateTime;
+use Favicon\Favicon;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
 use FeedIo\FeedInterface;
@@ -48,10 +49,14 @@ class Processor
     /** @var string */
     private $readabilityEndpoint;
 
+    /** @var Favicon */
+    private $faviconFinder;
+
     public function __construct(
         FeedIo $feedIo,
         FeedRepository $feedRepository,
         FeedItemRepository $feedItemRepository,
+        Favicon $faviconFinder,
         ClientInterface $guzzle,
         string $readabilityEndpoint,
         LoggerInterface $logger
@@ -59,6 +64,7 @@ class Processor
         $this->feedIo              = $feedIo;
         $this->feedRepository      = $feedRepository;
         $this->feedItemRepository  = $feedItemRepository;
+        $this->faviconFinder       = $faviconFinder;
         $this->guzzle              = $guzzle;
         $this->logger              = $logger;
         $this->readabilityEndpoint = $readabilityEndpoint;
@@ -112,7 +118,7 @@ class Processor
                 ->setTitle($feedContents->getTitle())
                 ->setDescription($feedContents->getDescription())
                 ->setLastModified($lastMod)
-                ->setIcon($feedContents->getLogo());
+                ->setIcon($this->findFeedIcon($feedContents));
 
             $this->feedRepository->save($feed);
 
@@ -161,6 +167,17 @@ class Processor
         }
 
         $this->logger->info('Finished.');
+    }
+
+    private function findFeedIcon(FeedInterface $feed): ?string
+    {
+        if ($feed->getLogo() !== null) {
+            return $feed->getLogo();
+        }
+
+        $favicon = $this->faviconFinder->get($feed->getLink());
+
+        return $favicon !== false ? $favicon : null;
     }
 
     /**

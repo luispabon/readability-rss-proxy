@@ -28,12 +28,15 @@ services:
     GuzzleHttp\ClientInterface:
         class: GuzzleHttp\Client
 
+    Favicon\Favicon: ~
+
     # Not autowiring feed processor as we need some config parameters
     App\Feed\Processor:
         arguments:
             - '@FeedIo\FeedIo'
             - '@App\Repository\FeedRepository'
             - '@App\Repository\FeedItemRepository'
+            - '@Favicon\Favicon'
             - '@GuzzleHttp\ClientInterface'
             - '%readability_endpoint%'
             - '@Psr\Log\LoggerInterface'

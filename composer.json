@@ -12,7 +12,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "arthurhoaro/favicon": "^1.2",
+        "luispabon/favicon": "dev-master",
         "debril/rss-atom-bundle": "^5.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",

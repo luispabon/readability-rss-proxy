@@ -148,6 +148,9 @@
     "knplabs/knp-paginator-bundle": {
         "version": "v4.0.0"
     },
+    "luispabon/favicon": {
+        "version": "dev-master"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },
@@ -180,6 +183,9 @@
     },
     "psr/log": {
         "version": "1.1.0"
+    },
+    "psr/simple-cache": {
+        "version": "1.0.1"
     },
     "ralouphie/getallheaders": {
         "version": "3.0.3"

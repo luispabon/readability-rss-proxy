@@ -1713,12 +1713,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/luispabon/favicon.git",
-                "reference": "69c2d2735130b0785f96c090ddabf8855beb2803"
+                "reference": "6283e89cee2da9ceac36652ca3e8d718d2eb8130"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/luispabon/favicon/zipball/69c2d2735130b0785f96c090ddabf8855beb2803",
-                "reference": "69c2d2735130b0785f96c090ddabf8855beb2803",
+                "url": "https://api.github.com/repos/luispabon/favicon/zipball/6283e89cee2da9ceac36652ca3e8d718d2eb8130",
+                "reference": "6283e89cee2da9ceac36652ca3e8d718d2eb8130",
                 "shasum": ""
             },
             "require": {
@@ -1767,7 +1767,7 @@
                 "sources": "https://github.com/luispabon/favicon",
                 "source": "https://github.com/luispabon/favicon/tree/master"
             },
-            "time": "2019-11-06T18:18:37+00:00"
+            "time": "2019-11-06T22:48:14+00:00"
         },
         {
             "name": "monolog/monolog",

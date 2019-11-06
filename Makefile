@@ -20,7 +20,7 @@ endif
 echo-build-tag:
 	echo $(BUILD_TAG)
 
-dev-init: clean install-mkcert create-certs clean-hosts init-hosts install-dependencies start init-db load-fixtures
+dev-init: clean install-mkcert create-certs clean-hosts init-hosts install-dependencies start clear-cache assets-install init-db load-fixtures
 
 install-dependencies:
 	docker-compose run php-fpm composer -o install
@@ -84,3 +84,15 @@ load-fixtures: start
 
 dev-storage-public:
 	gsutil acl ch -r -u AllUsers:R "gs://rss-proxy-dev/*"
+
+assets-install:
+	docker-compose run php-fpm bin/console assets:install
+
+clear-cache:
+	rm -rf var/*
+
+open-site:
+	xdg-open https://rss-proxy.local:7000/
+
+sync-feeds:
+	docker-compose exec php-fpm bin/console feed:fetch-all --no-time-constraint

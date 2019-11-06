@@ -25,7 +25,7 @@ doctrine:
         charset:        '%database_charset%'
         default_table_options:
             charset: '%database_charset%'
-            collate: utf8mb4_unicode_ci
+#            collate: utf8mb4_unicode_ci
 
     orm:
         auto_generate_proxy_classes: true

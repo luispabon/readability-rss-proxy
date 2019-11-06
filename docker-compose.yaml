@@ -7,17 +7,29 @@ services:
     redis:
         image: redis:5-alpine
 
-    postgres:
-        image: postgres:9.6-alpine
+#    postgres:
+#        image: postgres:9.6-alpine
+#        working_dir: /application
+#        volumes:
+#            - .:/application
+#        environment:
+#            - POSTGRES_USER=root
+#            - POSTGRES_PASSWORD=root
+#            - POSTGRES_DB=rss-proxy
+#        ports:
+#            - "7004:5432"
+    mysql:
+        image: mysql:5.7
         working_dir: /application
         volumes:
             - .:/application
         environment:
-            - POSTGRES_USER=root
-            - POSTGRES_PASSWORD=root
-            - POSTGRES_DB=rss-proxy
+            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_DATABASE=rss-proxy
+            - MYSQL_USER=user
+            - MYSQL_PASSWORD=passwd
         ports:
-            - "7004:5432"
+            - "1234:3306"
 
     webserver:
         image: nginx:alpine

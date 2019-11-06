@@ -75,7 +75,7 @@ rollback:
 	kubectl rollout undo deployment.v1.apps/rss-proxy
 
 init-db: start
-	docker-compose exec postgres bin/wait-for-db.sh
+#	docker-compose exec postgres bin/wait-for-db.sh
 	docker-compose exec php-fpm bin/console doctrine:migrations:migrate --no-interaction
 
 load-fixtures: start

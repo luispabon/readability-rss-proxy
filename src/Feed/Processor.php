@@ -103,7 +103,7 @@ class Processor
                 ->setTitle($feedContents->getTitle())
                 ->setDescription($feedContents->getDescription())
                 ->setLastModified($lastMod)
-                ->setIcon($this->getSiteFaviconUrl($feedContents));
+                ->setIcon($feedContents->getLogo());
 
             $this->feedRepository->save($feed);
 
@@ -228,26 +228,6 @@ class Processor
         }
 
         $this->logger->info('Batch finalised.');
-    }
-
-    /**
-     * Tries to work out the feed's icon.
-     */
-    private function getSiteFaviconUrl(FeedIoFeed $feed): ?string
-    {
-        foreach ($feed->getAllElements() as $element) {
-            /** @var NodeElement $element */
-            if ($element->getName() === 'image') {
-                foreach ($element->getAllElements() as $subElement) {
-                    /** @var NodeElement $subElement */
-                    if ($subElement->getName() === 'url') {
-                        return $subElement->getValue();
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 
     /**

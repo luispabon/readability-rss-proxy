@@ -1,18 +1,12 @@
 {
     "type": "project",
     "license": "proprietary",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/luispabon/favicon"
-        }
-    ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.2.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "luispabon/favicon": "dev-master",
+        "luispabon/favicon-finder": "dev-master",
         "debril/rss-atom-bundle": "^5.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",

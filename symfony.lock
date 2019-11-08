@@ -151,6 +151,9 @@
     "luispabon/favicon": {
         "version": "dev-master"
     },
+    "luispabon/favicon-finder": {
+        "version": "dev-master"
+    },
     "monolog/monolog": {
         "version": "1.25.1"
     },

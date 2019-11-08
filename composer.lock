@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fcc653a5d143c674a032eb5d613e4b7",
+    "content-hash": "1883eee5575e1bc37dc4a6fbd21102c0",
     "packages": [
         {
             "name": "debril/feed-io",
@@ -1708,26 +1708,29 @@
             "time": "2019-06-27T07:23:50+00:00"
         },
         {
-            "name": "luispabon/favicon",
+            "name": "luispabon/favicon-finder",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/luispabon/favicon.git",
-                "reference": "6283e89cee2da9ceac36652ca3e8d718d2eb8130"
+                "url": "https://github.com/luispabon/favicon-finder.git",
+                "reference": "eb57f6209961f0ffc2e0124f439e6ecc156993ec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/luispabon/favicon/zipball/6283e89cee2da9ceac36652ca3e8d718d2eb8130",
-                "reference": "6283e89cee2da9ceac36652ca3e8d718d2eb8130",
+                "url": "https://api.github.com/repos/luispabon/favicon-finder/zipball/eb57f6209961f0ffc2e0124f439e6ecc156993ec",
+                "reference": "eb57f6209961f0ffc2e0124f439e6ecc156993ec",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "guzzlehttp/guzzle": "^6.4",
-                "php": ">=7.3.3",
+                "php": ">=7.2.0",
                 "psr/simple-cache": "^1.0"
             },
             "require-dev": {
+                "guzzlehttp/psr7": "^1.6",
+                "infection/infection": "^0.14.2",
+                "phpstan/phpstan": "^0.11.19",
                 "phpunit/phpunit": "^8.4",
                 "symfony/var-dumper": "^4.3",
                 "weew/helpers-filesystem": "~1.0"
@@ -1735,9 +1738,10 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Favicon\\": "src/"
+                    "FaviconFinder\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -1762,12 +1766,7 @@
                 "finder",
                 "icon"
             ],
-            "support": {
-                "issues": "https://github.com/luispabon/favicon/issues",
-                "sources": "https://github.com/luispabon/favicon",
-                "source": "https://github.com/luispabon/favicon/tree/master"
-            },
-            "time": "2019-11-06T22:48:14+00:00"
+            "time": "2019-11-08T12:19:40+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6300,16 +6299,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.2.5",
+            "version": "v4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "b76bbc3c51f22c570648de48e8c2d941ed5e2cf2"
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/b76bbc3c51f22c570648de48e8c2d941ed5e2cf2",
-                "reference": "b76bbc3c51f22c570648de48e8c2d941ed5e2cf2",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/9a9981c347c5c49d6dfe5cf826bb882b824080dc",
+                "reference": "9a9981c347c5c49d6dfe5cf826bb882b824080dc",
                 "shasum": ""
             },
             "require": {
@@ -6317,7 +6316,7 @@
                 "php": ">=7.0"
             },
             "require-dev": {
-                "ircmaxell/php-yacc": "0.0.4",
+                "ircmaxell/php-yacc": "0.0.5",
                 "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0"
             },
             "bin": [
@@ -6326,7 +6325,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.2-dev"
+                    "dev-master": "4.3-dev"
                 }
             },
             "autoload": {
@@ -6348,7 +6347,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-10-25T18:33:07+00:00"
+            "time": "2019-11-08T13:50:10+00:00"
         },
         {
             "name": "symfony/debug-bundle",
@@ -6448,16 +6447,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.14.2",
+            "version": "v1.14.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "5dfcbc400b168943f15a21d4283ad848605d9bc2"
+                "reference": "c864e7f9b8d1e1f5f60acc3beda11299f637aded"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/5dfcbc400b168943f15a21d4283ad848605d9bc2",
-                "reference": "5dfcbc400b168943f15a21d4283ad848605d9bc2",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/c864e7f9b8d1e1f5f60acc3beda11299f637aded",
+                "reference": "c864e7f9b8d1e1f5f60acc3beda11299f637aded",
                 "shasum": ""
             },
             "require": {
@@ -6512,7 +6511,7 @@
                 "scaffold",
                 "scaffolding"
             ],
-            "time": "2019-11-04T13:50:13+00:00"
+            "time": "2019-11-07T00:56:03+00:00"
         },
         {
             "name": "symfony/profiler-pack",
@@ -6688,12 +6687,12 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "luispabon/favicon": 20
+        "luispabon/favicon-finder": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3",
+        "php": "^7.2.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*"

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1883eee5575e1bc37dc4a6fbd21102c0",
+    "content-hash": "c0304ac87f62c1aee8732b100e5c5097",
     "packages": [
         {
             "name": "debril/feed-io",
@@ -1709,16 +1709,16 @@
         },
         {
             "name": "luispabon/favicon-finder",
-            "version": "dev-master",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/luispabon/favicon-finder.git",
-                "reference": "eb57f6209961f0ffc2e0124f439e6ecc156993ec"
+                "reference": "80dbcb206a45df23dc8279b6e9f6f0a4ea676c1a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/luispabon/favicon-finder/zipball/eb57f6209961f0ffc2e0124f439e6ecc156993ec",
-                "reference": "eb57f6209961f0ffc2e0124f439e6ecc156993ec",
+                "url": "https://api.github.com/repos/luispabon/favicon-finder/zipball/80dbcb206a45df23dc8279b6e9f6f0a4ea676c1a",
+                "reference": "80dbcb206a45df23dc8279b6e9f6f0a4ea676c1a",
                 "shasum": ""
             },
             "require": {
@@ -1766,7 +1766,7 @@
                 "finder",
                 "icon"
             ],
-            "time": "2019-11-08T12:19:40+00:00"
+            "time": "2019-11-08T14:02:16+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -6686,9 +6686,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "luispabon/favicon-finder": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

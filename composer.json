@@ -6,7 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "luispabon/favicon-finder": "dev-master",
+        "luispabon/favicon-finder": "^1.0",
         "debril/rss-atom-bundle": "^5.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "guzzlehttp/guzzle": "^6.3",

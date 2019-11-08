@@ -9,7 +9,7 @@ use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
 use DateInterval;
 use DateTime;
-use Favicon\Favicon;
+use FaviconFinder\Favicon;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
 use FeedIo\FeedInterface;

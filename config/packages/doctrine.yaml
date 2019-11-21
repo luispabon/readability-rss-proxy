@@ -17,6 +17,9 @@ services:
             - method: setRedis
               arguments:
                     - '@redis'
+    mem_cache:
+        class: Doctrine\Common\Cache\ApcuCache
+
 doctrine:
     dbal:
         driver:         '%database_driver%'
@@ -40,12 +43,13 @@ doctrine:
                 alias: App
 
         query_cache_driver:
-            type: apcu
+            type: service
+            id: mem_cache
 
         metadata_cache_driver:
-            type: apcu
+            type: service
+            id: mem_cache
 
         result_cache_driver:
             type: service
             id: result_cache
-            namespace: doctrine/result

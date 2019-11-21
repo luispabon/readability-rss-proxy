@@ -60,5 +60,7 @@ class FeedFetchAllCommand extends Command
         $this->processor->fetchFeeds($feeds, $bypassLastModified);
 
         $output->writeln('Finished.');
+        
+        return 0;
     }
 }

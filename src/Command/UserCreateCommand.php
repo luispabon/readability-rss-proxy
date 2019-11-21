@@ -69,5 +69,7 @@ class UserCreateCommand extends Command
 
         $this->userRepository->makeUser($email, $password, $makeAdmin);
         $io->success('User created correctly');
+
+        return 0;
     }
 }

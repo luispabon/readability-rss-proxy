@@ -99,6 +99,17 @@ class Processor
 
             try {
                 $feedContents = $this->feedIo->read($feed->getFeedUrl(), null, $updateFrom)->getFeed();
+
+                // Sometimes, feed contents can be defective without throwing a ReadRerror. Seems to manifest on
+                // empty (crucial) fields
+                if ($feedContents->getLink() === null) {
+                    $this->logger->warning('Dodgy feed detected', [
+                        'feed'     => $feed->getFeedUrl(),
+                        'contents' => $feedContents->toArray(),
+                    ]);
+
+                    continue;
+                }
             } catch (ReadErrorException $ex) {
                 $this->logger->critical(
                     sprintf('Error reading feed %s: %s', $feed->getFeedUrl(), $ex->getMessage()),

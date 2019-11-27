@@ -102,6 +102,7 @@ class Processor
 
                 // Sometimes, feed contents can be defective without throwing a ReadRerror. Seems to manifest on
                 // empty (crucial) fields
+                // Possibly a race condition on static-file feeds where we read as they're being updated
                 if ($feedContents->getLink() === null) {
                     $this->logger->warning('Dodgy feed detected', [
                         'feed'     => $feed->getFeedUrl(),

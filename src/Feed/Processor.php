@@ -52,6 +52,9 @@ class Processor
     /** @var Favicon */
     private $faviconFinder;
 
+    /** @var int */
+    private $ingestedCount = 0;
+
     public function __construct(
         FeedIo $feedIo,
         FeedRepository $feedRepository,
@@ -178,7 +181,7 @@ class Processor
             }
         }
 
-        $this->logger->info('Finished.');
+        $this->logger->info(sprintf('Finished. %s feed items ingested on this run', $this->ingestedCount));
     }
 
     private function findFeedIcon(FeedInterface $feed): ?string
@@ -263,6 +266,7 @@ class Processor
             $this->feedItemRepository->save($feedItem);
 
             $counter++;
+            $this->ingestedCount++;
         }
 
         $this->logger->info('Batch finalised.');

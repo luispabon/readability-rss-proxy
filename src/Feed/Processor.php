@@ -9,6 +9,7 @@ use App\Repository\FeedItemRepository;
 use App\Repository\FeedRepository;
 use DateInterval;
 use DateTime;
+use Exception;
 use FaviconFinder\Favicon;
 use FeedIo\Feed as FeedIoFeed;
 use FeedIo\Feed\ItemInterface as RawFeedItem;
@@ -79,7 +80,7 @@ class Processor
      * @param array|Feed[] $feeds
      * @param bool         $bypassLastModified
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function fetchFeeds(array $feeds, bool $bypassLastModified): void
     {

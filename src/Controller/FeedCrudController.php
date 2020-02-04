@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Throwable;
 
 /**
  * @Route("/admin/feed")
@@ -62,7 +63,7 @@ class FeedCrudController extends AbstractController
             // Fetch feed, but fail gracefully
             try {
                 $this->feedProcessor->fetchFeeds([$feed], true);
-            } catch (\Throwable $exception) {
+            } catch (Throwable $exception) {
                 // Do nothing
             }
 

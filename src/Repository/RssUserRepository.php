@@ -6,6 +6,7 @@ namespace App\Repository;
 use App\Entity\RssUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -32,11 +33,11 @@ class RssUserRepository extends ServiceEntityRepository
     public function makeUser(string $email, string $password, bool $makeAdmin): RssUser
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-            throw new \InvalidArgumentException(sprintf('`%s` is not a valid email address', $email));
+            throw new InvalidArgumentException(sprintf('`%s` is not a valid email address', $email));
         }
 
         if (trim($password) === '') {
-            throw new \InvalidArgumentException('Empty passwords are not allowed');
+            throw new InvalidArgumentException('Empty passwords are not allowed');
         }
 
         $roles = ['ROLE_USER'];

@@ -531,5 +531,5 @@ spec:
         app: readability-js-server
     spec:
       containers:
-        - image: phpdockerio/readability-js-server:1.0
+        - image: phpdockerio/readability-js-server:1
           name: runtime

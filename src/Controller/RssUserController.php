@@ -21,13 +21,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class RssUserController extends AbstractController
 {
     /** @var UserPasswordEncoderInterface */
-    private $passwordEncoder;
+    private UserPasswordEncoderInterface $passwordEncoder;
 
     /**@var RssUserRepository */
-    private $userRepository;
+    private RssUserRepository $userRepository;
 
     /** @var Permissions */
-    private $permissions;
+    private Permissions $permissions;
 
     public function __construct(
         UserPasswordEncoderInterface $passwordEncoder,

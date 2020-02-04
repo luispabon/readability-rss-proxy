@@ -24,12 +24,10 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    const DEFAULT_REDIRECT = 'feed_index';
-
-    private $entityManager;
-    private $urlGenerator;
-    private $csrfTokenManager;
-    private $passwordEncoder;
+    private EntityManagerInterface       $entityManager;
+    private UrlGeneratorInterface        $urlGenerator;
+    private CsrfTokenManagerInterface    $csrfTokenManager;
+    private UserPasswordEncoderInterface $passwordEncoder;
 
     public function __construct(
         EntityManagerInterface $entityManager,

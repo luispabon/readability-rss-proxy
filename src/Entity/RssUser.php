@@ -32,18 +32,18 @@ class RssUser implements UserInterface
     /**
      * @ORM\Column(type="json")
      */
-    private $roles = [];
+    private array $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
      */
-    private $password;
+    private string $password;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="rssUser", orphanRemoval=true)
      */
-    private $feeds;
+    private Collection $feeds;
 
     /**
      * @ORM\Column(type="string", length=255)

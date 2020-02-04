@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Command;
 
 use App\Repository\RssUserRepository;
 use App\Services\PasswordStrengthValidator;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,11 +17,11 @@ class UserCreateCommand extends Command
     /**
      * @var RssUserRepository
      */
-    private $userRepository;
+    private RssUserRepository $userRepository;
     /**
      * @var PasswordStrengthValidator
      */
-    private $passwdValidator;
+    private PasswordStrengthValidator $passwdValidator;
 
     public function __construct(RssUserRepository $userRepository, PasswordStrengthValidator $passwdValidator)
     {
@@ -40,9 +42,9 @@ class UserCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->success('Create a RSS user');
 
-        $email = $io->ask('Please enter the user\'s email', null, function ($answer) {
+        $email = $io->ask('Please enter the user\'s email', null, static function ($answer) {
             if (filter_var($answer, FILTER_VALIDATE_EMAIL) === false) {
-                throw new \RuntimeException('Not a valid email address');
+                throw new RuntimeException('Not a valid email address');
             }
 
             return $answer;
@@ -50,16 +52,16 @@ class UserCreateCommand extends Command
 
         $password = $io->ask('Please enter the user\'s password', null, function ($answer) {
             if ($this->passwdValidator->validate($answer) === false) {
-                throw new \RuntimeException('Weak password, please re-enter');
+                throw new RuntimeException('Weak password, please re-enter');
             }
 
             return $answer;
         });
 
         $makeAdmin = false;
-        if ($io->ask('Make this user admin? (y/n)', 'n', function ($answer) {
+        if ($io->ask('Make this user admin? (y/n)', 'n', static function ($answer) {
                 if ($answer !== 'y' && $answer !== 'n') {
-                    throw new \RuntimeException('Answer `y` or `n`');
+                    throw new RuntimeException('Answer `y` or `n`');
                 }
 
                 return $answer;

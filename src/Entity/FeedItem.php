@@ -45,7 +45,7 @@ class FeedItem
      * @ORM\ManyToOne(targetEntity="Feed", inversedBy="feedItems")
      * @ORM\JoinColumn(name="feed_id", referencedColumnName="id", nullable=false)
      */
-    private $feed;
+    private Feed $feed;
 
     /**
      * @ORM\Column(type="datetimetz")

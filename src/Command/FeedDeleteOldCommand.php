@@ -10,7 +10,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
 
 /**
@@ -21,11 +20,11 @@ class FeedDeleteOldCommand extends Command
     protected static $defaultName = 'feed:delete-old';
 
     /** @var FeedItemRepository */
-    private $feedItemRepository;
+    private FeedItemRepository $feedItemRepository;
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(FeedItemRepository $feedItemRepository, LoggerInterface $logger)
     {

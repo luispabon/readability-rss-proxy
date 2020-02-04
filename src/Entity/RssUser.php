@@ -43,7 +43,7 @@ class RssUser implements UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="rssUser", orphanRemoval=true)
      */
-    private ArrayCollection $feeds;
+    private Collection $feeds;
 
     /**
      * @ORM\Column(type="string", length=255)

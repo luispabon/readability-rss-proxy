@@ -54,18 +54,18 @@ class Feed
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private ?DateTimeInterface $icon;
+    private ?string $icon;
 
     /**
      * @ORM\Column(type="datetimetz", nullable=true)
      */
-    private $lastModified;
+    private ?DateTimeInterface $lastModified;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\RssUser", inversedBy="feeds")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $rssUser;
+    private RssUser $rssUser;
 
     public function __construct()
     {

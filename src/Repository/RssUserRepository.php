@@ -21,7 +21,7 @@ class RssUserRepository extends ServiceEntityRepository
     /**
      * @var UserPasswordEncoderInterface
      */
-    private $passwordEncoder;
+    private UserPasswordEncoderInterface $passwordEncoder;
 
     public function __construct(ManagerRegistry $registry, UserPasswordEncoderInterface $passwordEncoder)
     {

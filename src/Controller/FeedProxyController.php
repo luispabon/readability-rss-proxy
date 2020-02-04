@@ -20,16 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class FeedProxyController extends AbstractController
 {
     /** @var HttpFoundationFactoryInterface */
-    private $psrConverter;
+    private HttpFoundationFactoryInterface $psrConverter;
 
     /** @var FeedRepository */
-    private $feedRepository;
+    private FeedRepository $feedRepository;
 
     /** @var FeedIo */
-    private $feedIo;
+    private FeedIo $feedIo;
 
     /** @var RssUserRepository */
-    private $userRepository;
+    private RssUserRepository $userRepository;
 
     public function __construct(
         HttpFoundationFactoryInterface $httpFoundationFactory,

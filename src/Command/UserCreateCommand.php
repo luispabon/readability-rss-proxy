@@ -16,11 +16,11 @@ class UserCreateCommand extends Command
     /**
      * @var RssUserRepository
      */
-    private $userRepository;
+    private RssUserRepository $userRepository;
     /**
      * @var PasswordStrengthValidator
      */
-    private $passwdValidator;
+    private PasswordStrengthValidator $passwdValidator;
 
     public function __construct(RssUserRepository $userRepository, PasswordStrengthValidator $passwdValidator)
     {
@@ -41,7 +41,7 @@ class UserCreateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->success('Create a RSS user');
 
-        $email = $io->ask('Please enter the user\'s email', null, function ($answer) {
+        $email = $io->ask('Please enter the user\'s email', null, static function ($answer) {
             if (filter_var($answer, FILTER_VALIDATE_EMAIL) === false) {
                 throw new RuntimeException('Not a valid email address');
             }
@@ -58,7 +58,7 @@ class UserCreateCommand extends Command
         });
 
         $makeAdmin = false;
-        if ($io->ask('Make this user admin? (y/n)', 'n', function ($answer) {
+        if ($io->ask('Make this user admin? (y/n)', 'n', static function ($answer) {
                 if ($answer !== 'y' && $answer !== 'n') {
                     throw new RuntimeException('Answer `y` or `n`');
                 }

@@ -26,7 +26,7 @@ class FeedItemRepository extends ServiceEntityRepository
     /**
      * @var PaginatorInterface
      */
-    private $paginator;
+    private PaginatorInterface $paginator;
 
     public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
     {

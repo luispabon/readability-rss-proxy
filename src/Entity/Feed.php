@@ -25,7 +25,7 @@ class Feed
      *
      * @ORM\Column(type="text")
      */
-    private $feedUrl;
+    private string $feedUrl;
 
     /**
      * @var FeedItem[]|ArrayCollection
@@ -40,21 +40,21 @@ class Feed
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $title;
+    private ?string $title;
 
     /**
      * @var string|null
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $description;
+    private ?string $description;
 
     /**
      * @var DateTimeInterface|null
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $icon;
+    private ?DateTimeInterface $icon;
 
     /**
      * @ORM\Column(type="datetimetz", nullable=true)

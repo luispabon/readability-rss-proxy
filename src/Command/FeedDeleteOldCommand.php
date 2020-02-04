@@ -21,11 +21,11 @@ class FeedDeleteOldCommand extends Command
     protected static $defaultName = 'feed:delete-old';
 
     /** @var FeedItemRepository */
-    private $feedItemRepository;
+    private FeedItemRepository $feedItemRepository;
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(FeedItemRepository $feedItemRepository, LoggerInterface $logger)
     {

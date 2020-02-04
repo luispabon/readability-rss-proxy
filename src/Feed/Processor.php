@@ -33,28 +33,28 @@ class Processor
     private const FEED_ITEM_BATCH_SIZE = 5;
 
     /** @var FeedIo */
-    private $feedIo;
+    private FeedIo $feedIo;
 
     /** @var FeedRepository */
-    private $feedRepository;
+    private FeedRepository $feedRepository;
 
     /** @var ClientInterface */
-    private $guzzle;
+    private ClientInterface $guzzle;
 
     /** @var FeedItemRepository */
-    private $feedItemRepository;
+    private FeedItemRepository $feedItemRepository;
 
     /** @var LoggerInterface */
-    private $logger;
+    private LoggerInterface $logger;
 
     /** @var string */
-    private $readabilityEndpoint;
+    private string $readabilityEndpoint;
 
     /** @var Favicon */
-    private $faviconFinder;
+    private Favicon $faviconFinder;
 
     /** @var int */
-    private $ingestedCount = 0;
+    private int $ingestedCount = 0;
 
     public function __construct(
         FeedIo $feedIo,

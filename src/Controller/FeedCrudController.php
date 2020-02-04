@@ -23,10 +23,10 @@ use Throwable;
 class FeedCrudController extends AbstractController
 {
     /** @var FeedProcessor */
-    private $feedProcessor;
+    private FeedProcessor $feedProcessor;
 
     /** @var Permissions */
-    private $permissions;
+    private Permissions $permissions;
 
     public function __construct(FeedProcessor $feedProcessor, Permissions $permissions)
     {

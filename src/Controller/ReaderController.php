@@ -19,10 +19,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ReaderController extends AbstractController
 {
     /** @var FeedItemRepository */
-    private $feedItemRepository;
+    private FeedItemRepository $feedItemRepository;
 
     /** @var SerializerInterface */
-    private $serializer;
+    private SerializerInterface $serializer;
 
     public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer)
     {

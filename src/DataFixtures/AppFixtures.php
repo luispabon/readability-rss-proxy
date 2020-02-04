@@ -13,7 +13,7 @@ class AppFixtures extends Fixture
     /**
      * @var RssUserRepository
      */
-    private $userRepository;
+    private RssUserRepository $userRepository;
 
     public function __construct(RssUserRepository $userRepository)
     {

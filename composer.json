@@ -30,7 +30,6 @@
         "twig/extensions": "^1.5"
     },
     "require-dev": {
-        "amnuts/opcache-gui": "^2.5",
         "doctrine/doctrine-fixtures-bundle": "^3.2",
         "symfony/debug-pack": "^1.0",
         "symfony/maker-bundle": "^1.13"

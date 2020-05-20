@@ -42,14 +42,12 @@ doctrine:
                 prefix: 'App\Entity'
                 alias: App
 
-        query_cache_driver:
-            type: service
-            id: mem_cache
-
         metadata_cache_driver:
-            type: service
-            id: mem_cache
-
+            type: pool
+            pool: doctrine_system_cache_pool
+        query_cache_driver:
+            type: pool
+            pool: doctrine_system_cache_pool
         result_cache_driver:
-            type: service
-            id: result_cache
+            type: pool
+            pool: doctrine_result_cache_pool

@@ -61,6 +61,17 @@ services:
         calls:
             - [setRedis, ["@redis"]]
 
+    Psr\Cache\CacheItemPoolInterface:
+        class: Symfony\Component\Cache\Adapter\RedisAdapter
+        arguments:
+            - '@redis'
+            - 'app-cache'
+
+    Psr\SimpleCache\CacheInterface:
+        class: Symfony\Component\Cache\Psr16Cache
+        arguments:
+            - '@Psr\Cache\CacheItemPoolInterface'
+
     Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
         arguments:
             - '@redis'

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Feed\Processor;
+use App\Feed\Processor as FeedProcessor;
 use App\Repository\FeedRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,11 +24,11 @@ class FeedFetchAllCommand extends Command
     private FeedRepository $feedRepository;
 
     /**
-     * @var Processor
+     * @var FeedProcessor
      */
-    private Processor $processor;
+    private FeedProcessor $processor;
 
-    public function __construct(FeedRepository $feedRepository, Processor $processor)
+    public function __construct(FeedRepository $feedRepository, FeedProcessor $processor)
     {
         $this->feedRepository = $feedRepository;
         $this->processor      = $processor;
@@ -52,7 +52,8 @@ class FeedFetchAllCommand extends Command
 
     protected function execute(InputInterface $input, CommandOutput $output)
     {
-        $feeds              = $this->feedRepository->findAll();
+        $feeds = $this->feedRepository->findAll();
+
         $bypassLastModified = $input->getOption('no-time-constraint');
 
         $output->writeln(sprintf('Processing %s feeds.', count($feeds)));
@@ -60,7 +61,7 @@ class FeedFetchAllCommand extends Command
         $this->processor->fetchFeeds($feeds, $bypassLastModified);
 
         $output->writeln('Finished.');
-        
+
         return 0;
     }
 }

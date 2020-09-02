@@ -533,3 +533,4 @@ spec:
       containers:
         - image: phpdockerio/readability-js-server:1
           name: runtime
+          imagePullPolicy: Always

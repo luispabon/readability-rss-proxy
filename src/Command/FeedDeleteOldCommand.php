@@ -19,15 +19,9 @@ class FeedDeleteOldCommand extends Command
 {
     protected static $defaultName = 'feed:delete-old';
 
-    private FeedItemRepository $feedItemRepository;
-    private LoggerInterface    $logger;
-
-    public function __construct(FeedItemRepository $feedItemRepository, LoggerInterface $logger)
+    public function __construct(private FeedItemRepository $feedItemRepository, private LoggerInterface $logger)
     {
         parent::__construct();
-
-        $this->feedItemRepository = $feedItemRepository;
-        $this->logger             = $logger;
     }
 
     protected function configure(): void

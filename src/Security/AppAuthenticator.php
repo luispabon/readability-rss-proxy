@@ -31,7 +31,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     private EntityManagerInterface      $entityManager;
     private UrlGeneratorInterface       $urlGenerator;
     private CsrfTokenManagerInterface   $csrfTokenManager;
-    private UserPasswordHasherInterface $passwordEncoder;
+    private UserPasswordHasherInterface $passwordHasher;
 
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -42,7 +42,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $this->entityManager    = $entityManager;
         $this->urlGenerator     = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
-        $this->passwordEncoder  = $passwordEncoder;
+        $this->passwordHasher   = $passwordEncoder;
     }
 
     public function authenticate(Request $request): PassportInterface
@@ -63,7 +63,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             throw new CustomUserMessageAuthenticationException('Email could not be found.');
         }
 
-        if ($this->passwordEncoder->isPasswordValid($user, $password) !== true) {
+        if ($this->passwordHasher->isPasswordValid($user, $password) !== true) {
             throw new UnauthorizedHttpException('Password is invalid');
         }
 

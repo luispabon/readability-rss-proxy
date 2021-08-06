@@ -10,8 +10,8 @@ use App\Services\Permissions;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/admin/user")
@@ -20,23 +20,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RssUserController extends AbstractController
 {
-    /** @var UserPasswordEncoderInterface */
-    private UserPasswordEncoderInterface $passwordEncoder;
-
-    /**@var RssUserRepository */
-    private RssUserRepository $userRepository;
-
-    /** @var Permissions */
-    private Permissions $permissions;
-
     public function __construct(
-        UserPasswordEncoderInterface $passwordEncoder,
-        RssUserRepository $userRepository,
-        Permissions $permissions
+        private UserPasswordHasherInterface $passwordHasher,
+        private RssUserRepository $userRepository,
+        private Permissions $permissions
     ) {
-        $this->passwordEncoder = $passwordEncoder;
-        $this->userRepository  = $userRepository;
-        $this->permissions     = $permissions;
     }
 
     /**
@@ -137,7 +125,7 @@ class RssUserController extends AbstractController
     {
         $rawPassword = $user->getPassword();
 
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $rawPassword));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $rawPassword));
 
         return $user;
     }

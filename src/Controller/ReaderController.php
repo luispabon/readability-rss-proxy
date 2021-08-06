@@ -18,16 +18,8 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class ReaderController extends AbstractController
 {
-    /** @var FeedItemRepository */
-    private FeedItemRepository $feedItemRepository;
-
-    /** @var SerializerInterface */
-    private SerializerInterface $serializer;
-
-    public function __construct(FeedItemRepository $feedItemRepository, SerializerInterface $serializer)
+    public function __construct(private FeedItemRepository $feedItemRepository, private SerializerInterface $serializer)
     {
-        $this->feedItemRepository = $feedItemRepository;
-        $this->serializer         = $serializer;
     }
 
     /**

@@ -10,11 +10,10 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
  */
 class PaginatedFeedItems
 {
-    /** @var array */
     private array $paginator;
 
-    /** @var array|FeedItem[] */
-    private $items;
+    /** @var FeedItem[] */
+    private iterable $items;
 
     public function __construct(PaginationInterface $paginator)
     {
@@ -27,20 +26,13 @@ class PaginatedFeedItems
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getPaginator(): array
     {
         return $this->paginator;
     }
 
-    /**
-     * @return FeedItem[]|array
-     */
     public function getItems(): array
     {
         return $this->items;
     }
-
 }

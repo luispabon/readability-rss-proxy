@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     encoders:
         App\Entity\RssUser:
             algorithm: auto
@@ -14,10 +15,8 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\AppAuthenticator
+            custom_authenticators:
+                - App\Security\AppAuthenticator
             logout:
                 path: app_logout
                 target: app_login

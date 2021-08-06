@@ -18,9 +18,9 @@ use FeedIo\FeedIo;
 use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use function GuzzleHttp\Promise\settle;
 
 /**
  * Each feed item is persisted into our data store, with a twist: we overwrite whatever small description the feed
@@ -32,46 +32,17 @@ class Processor
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
 
-    /** @var FeedIo */
-    private FeedIo $feedIo;
-
-    /** @var FeedRepository */
-    private FeedRepository $feedRepository;
-
-    /** @var ClientInterface */
-    private ClientInterface $guzzle;
-
-    /** @var FeedItemRepository */
-    private FeedItemRepository $feedItemRepository;
-
-    /** @var LoggerInterface */
-    private LoggerInterface $logger;
-
-    /** @var string */
-    private string $readabilityEndpoint;
-
-    /** @var Favicon */
-    private Favicon $faviconFinder;
-
-    /** @var int */
     private int $ingestedCount = 0;
 
     public function __construct(
-        FeedIo $feedIo,
-        FeedRepository $feedRepository,
-        FeedItemRepository $feedItemRepository,
-        Favicon $faviconFinder,
-        ClientInterface $guzzle,
-        string $readabilityEndpoint,
-        LoggerInterface $logger
+        private FeedIo $feedIo,
+        private FeedRepository $feedRepository,
+        private FeedItemRepository $feedItemRepository,
+        private Favicon $faviconFinder,
+        private ClientInterface $guzzle,
+        private string $readabilityEndpoint,
+        private LoggerInterface $logger
     ) {
-        $this->feedIo              = $feedIo;
-        $this->feedRepository      = $feedRepository;
-        $this->feedItemRepository  = $feedItemRepository;
-        $this->faviconFinder       = $faviconFinder;
-        $this->guzzle              = $guzzle;
-        $this->logger              = $logger;
-        $this->readabilityEndpoint = $readabilityEndpoint;
     }
 
     /**
@@ -208,11 +179,10 @@ class Processor
         $this->logger->info(sprintf('Finalising acquisition of %s feed items', $numRawFeedItems));
 
         // This ignores any errors fetching the item
-        $fetchedSuccessfully = settle($promises)->wait();
+        $fetchedSuccessfully = Utils::settle($promises)->wait();
 
         $counter = 1;
         foreach ($fetchedSuccessfully as $link => $promiseResult) {
-            /** @var RawFeedItem $rawFeedItem */
             $rawFeedItem = $rawFeedItems[$link];
 
             $this->logger->info(sprintf(

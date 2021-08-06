@@ -17,27 +17,27 @@ class FeedItem
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $title;
+    private string $title;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $description;
+    private string $description;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $link;
+    private string $link;
 
     /**
      * @ORM\Column(type="datetimetz")
      */
-    private $lastModified;
+    private DateTimeInterface $lastModified;
 
     /**
      * @var Feed
@@ -50,17 +50,17 @@ class FeedItem
     /**
      * @ORM\Column(type="datetimetz")
      */
-    private $createdAt;
+    private DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $excerpt;
+    private string $excerpt;
 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private $image;
+    private ?string $image;
 
     public function getId(): ?int
     {

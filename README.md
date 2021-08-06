@@ -12,7 +12,7 @@ dodgy and unfinished, and a number of other UX issues.
   * Make
   * `libnss3-tools` (or whichever package contains `certutil` in your system)
 
-Run `make dev-init`. This will spin up the local environment and load up some users with some feeds ready to go. Once 
+Run `make init`. This will spin up the local environment and load up some users with some feeds ready to go. Once 
 finished, open [https://rss-proxy.local:7000/](https://rss-proxy.local:7000/). There are two users, both with the same
 feeds but one is admin and the other one isn't:
 

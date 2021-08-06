@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RssUserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', EmailType::class, [
@@ -23,10 +23,12 @@ class RssUserType extends AbstractType
                     new Email(),
                 ],
             ])
-            ->add('password', PasswordType::class);
+            ->add('password', PasswordType::class, [
+                'constraints' => [new NotBlank()],
+            ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => RssUser::class,

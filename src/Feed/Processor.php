@@ -18,9 +18,9 @@ use FeedIo\FeedIo;
 use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Promise\Promise;
+use GuzzleHttp\Promise\Utils;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use function GuzzleHttp\Promise\settle;
 
 /**
  * Each feed item is persisted into our data store, with a twist: we overwrite whatever small description the feed
@@ -32,29 +32,15 @@ class Processor
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
 
-    /** @var FeedIo */
-    private FeedIo $feedIo;
-
-    /** @var FeedRepository */
-    private FeedRepository $feedRepository;
-
-    /** @var ClientInterface */
-    private ClientInterface $guzzle;
-
-    /** @var FeedItemRepository */
+    private FeedIo             $feedIo;
+    private FeedRepository     $feedRepository;
+    private ClientInterface    $guzzle;
     private FeedItemRepository $feedItemRepository;
+    private LoggerInterface    $logger;
+    private Favicon            $faviconFinder;
 
-    /** @var LoggerInterface */
-    private LoggerInterface $logger;
-
-    /** @var string */
     private string $readabilityEndpoint;
-
-    /** @var Favicon */
-    private Favicon $faviconFinder;
-
-    /** @var int */
-    private int $ingestedCount = 0;
+    private int    $ingestedCount = 0;
 
     public function __construct(
         FeedIo $feedIo,
@@ -208,7 +194,7 @@ class Processor
         $this->logger->info(sprintf('Finalising acquisition of %s feed items', $numRawFeedItems));
 
         // This ignores any errors fetching the item
-        $fetchedSuccessfully = settle($promises)->wait();
+        $fetchedSuccessfully = Utils::settle($promises)->wait();
 
         $counter = 1;
         foreach ($fetchedSuccessfully as $link => $promiseResult) {

@@ -8,7 +8,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * @method RssUser|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,12 +18,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class RssUserRepository extends ServiceEntityRepository
 {
-    /**
-     * @var UserPasswordEncoderInterface
-     */
-    private UserPasswordEncoderInterface $passwordEncoder;
+    private UserPasswordHasherInterface $passwordEncoder;
 
-    public function __construct(ManagerRegistry $registry, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(ManagerRegistry $registry, UserPasswordHasherInterface $passwordEncoder)
     {
         parent::__construct($registry, RssUser::class);
 
@@ -50,7 +47,7 @@ class RssUserRepository extends ServiceEntityRepository
             ->setRoles($roles)
             ->setOpmlToken(Uuid::uuid4()->toString());
 
-        $user->setPassword($this->passwordEncoder->encodePassword($user, $password));
+        $user->setPassword($this->passwordEncoder->hashPassword($user, $password));
 
         $this->save($user);
 

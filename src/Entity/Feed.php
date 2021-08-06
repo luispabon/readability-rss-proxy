@@ -5,7 +5,6 @@ namespace App\Entity;
 
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -18,40 +17,32 @@ class Feed
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="text")
      */
     private string $feedUrl;
 
     /**
-     * @var FeedItem[]|ArrayCollection
+     * @var FeedItem[]
      *
      * @ORM\OneToMany(targetEntity="FeedItem", mappedBy="feed", cascade={"all"})
      * @ORM\OrderBy({"lastModified" = "DESC"})
      */
-    private $feedItems;
+    private iterable $feedItems;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $title;
 
     /**
-     * @var string|null
-     *
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $description;
 
     /**
-     * @var DateTimeInterface|null
-     *
      * @ORM\Column(type="text", nullable=true)
      */
     private ?string $icon;
@@ -89,11 +80,6 @@ class Feed
         return $this;
     }
 
-    /**
-     * @param FeedItem $feedItem
-     *
-     * @return self
-     */
     public function addFeedItem(FeedItem $feedItem): self
     {
         $this->feedItems[] = $feedItem;
@@ -102,11 +88,6 @@ class Feed
         return $this;
     }
 
-    /**
-     * @param FeedItem $feedItem
-     *
-     * @return self
-     */
     public function removeFeedItem(FeedItem $feedItem): self
     {
         $this->feedItems->removeElement($feedItem);
@@ -115,9 +96,9 @@ class Feed
     }
 
     /**
-     * @return Collection|FeedItem[]
+     * @return FeedItem[]
      */
-    public function getFeedItems(): Collection
+    public function getFeedItems(): iterable
     {
         return $this->feedItems;
     }

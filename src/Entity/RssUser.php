@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -43,7 +42,7 @@ class RssUser implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Feed", mappedBy="rssUser", orphanRemoval=true)
      */
-    private Collection $feeds;
+    private iterable $feeds;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -134,9 +133,9 @@ class RssUser implements PasswordAuthenticatedUserInterface, UserInterface
     }
 
     /**
-     * @return Collection|Feed[]
+     * @return Feed[]
      */
-    public function getFeeds(): Collection
+    public function getFeeds(): iterable
     {
         return $this->feeds;
     }

@@ -20,14 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface as CommandOutput;
  */
 class FeedFetchAllCommand extends Command
 {
-    private FeedRepository $feedRepository;
-    private FeedProcessor  $processor;
-
-    public function __construct(FeedRepository $feedRepository, FeedProcessor $processor)
+    public function __construct(private FeedRepository $feedRepository, private FeedProcessor $processor)
     {
-        $this->feedRepository = $feedRepository;
-        $this->processor      = $processor;
-
         parent::__construct();
     }
 

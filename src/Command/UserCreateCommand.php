@@ -15,14 +15,10 @@ class UserCreateCommand extends Command
 {
     protected static $defaultName = 'user:create';
 
-    private RssUserRepository         $userRepository;
-    private PasswordStrengthValidator $passwdValidator;
-
-    public function __construct(RssUserRepository $userRepository, PasswordStrengthValidator $passwdValidator)
-    {
-        $this->userRepository  = $userRepository;
-        $this->passwdValidator = $passwdValidator;
-
+    public function __construct(
+        private RssUserRepository $userRepository,
+        private PasswordStrengthValidator $passwdValidator
+    ) {
         parent::__construct();
     }
 

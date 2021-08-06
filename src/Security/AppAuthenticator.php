@@ -28,21 +28,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    private EntityManagerInterface      $entityManager;
-    private UrlGeneratorInterface       $urlGenerator;
-    private CsrfTokenManagerInterface   $csrfTokenManager;
-    private UserPasswordHasherInterface $passwordHasher;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator,
-        CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordHasherInterface $passwordEncoder
+        private EntityManagerInterface $entityManager,
+        private UrlGeneratorInterface $urlGenerator,
+        private CsrfTokenManagerInterface $csrfTokenManager,
+        private UserPasswordHasherInterface $passwordHasher
     ) {
-        $this->entityManager    = $entityManager;
-        $this->urlGenerator     = $urlGenerator;
-        $this->csrfTokenManager = $csrfTokenManager;
-        $this->passwordHasher   = $passwordEncoder;
     }
 
     public function authenticate(Request $request): PassportInterface

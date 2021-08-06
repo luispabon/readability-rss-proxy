@@ -26,20 +26,13 @@ class PaginatedFeedItems
         ];
     }
 
-    /**
-     * @return array
-     */
     public function getPaginator(): array
     {
         return $this->paginator;
     }
 
-    /**
-     * @return FeedItem[]
-     */
     public function getItems(): array
     {
         return $this->items;
     }
-
 }

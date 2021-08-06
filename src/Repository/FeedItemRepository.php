@@ -22,16 +22,9 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class FeedItemRepository extends ServiceEntityRepository
 {
-    /**
-     * @var PaginatorInterface
-     */
-    private PaginatorInterface $paginator;
-
-    public function __construct(ManagerRegistry $registry, PaginatorInterface $paginator)
+    public function __construct(ManagerRegistry $registry, private PaginatorInterface $paginator)
     {
         parent::__construct($registry, FeedItem::class);
-
-        $this->paginator = $paginator;
     }
 
     public function save(FeedItem $feedItem): void
@@ -75,12 +68,7 @@ class FeedItemRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param RssUser $user
-     * @param array   $sortCriteria Example: ['title DESC', 'lastModified ASC']
-     * @param int     $page
-     * @param int     $perPage
-     *
-     * @return PaginatedFeedItems
+     * @param array $sortCriteria Example: ['title DESC', 'lastModified ASC']
      */
     public function findAllForUserPaginated(
         RssUser $user,

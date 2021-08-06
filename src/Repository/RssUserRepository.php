@@ -18,13 +18,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class RssUserRepository extends ServiceEntityRepository
 {
-    private UserPasswordHasherInterface $passwordEncoder;
-
-    public function __construct(ManagerRegistry $registry, UserPasswordHasherInterface $passwordEncoder)
+    public function __construct(ManagerRegistry $registry, private UserPasswordHasherInterface $passwordEncoder)
     {
         parent::__construct($registry, RssUser::class);
-
-        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function makeUser(string $email, string $password, bool $makeAdmin): RssUser

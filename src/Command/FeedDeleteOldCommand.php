@@ -19,12 +19,8 @@ class FeedDeleteOldCommand extends Command
 {
     protected static $defaultName = 'feed:delete-old';
 
-    /** @var FeedItemRepository */
     private FeedItemRepository $feedItemRepository;
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
+    private LoggerInterface    $logger;
 
     public function __construct(FeedItemRepository $feedItemRepository, LoggerInterface $logger)
     {
@@ -34,7 +30,7 @@ class FeedDeleteOldCommand extends Command
         $this->logger             = $logger;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Deletes old feed items')
@@ -42,7 +38,7 @@ class FeedDeleteOldCommand extends Command
                 'This is pretty flexible: a date such as "2018-01-01 00:13" or "-3 months"');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($input->getOption('date') === null) {
             $this->logger->error('No date given');

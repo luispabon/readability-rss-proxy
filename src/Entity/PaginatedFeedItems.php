@@ -36,7 +36,7 @@ class PaginatedFeedItems
     }
 
     /**
-     * @return FeedItem[]|array
+     * @return FeedItem[]
      */
     public function getItems(): array
     {

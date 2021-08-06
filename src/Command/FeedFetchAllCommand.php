@@ -20,13 +20,8 @@ use Symfony\Component\Console\Output\OutputInterface as CommandOutput;
  */
 class FeedFetchAllCommand extends Command
 {
-    /** @var FeedRepository */
     private FeedRepository $feedRepository;
-
-    /**
-     * @var FeedProcessor
-     */
-    private FeedProcessor $processor;
+    private FeedProcessor  $processor;
 
     public function __construct(FeedRepository $feedRepository, FeedProcessor $processor)
     {
@@ -38,7 +33,7 @@ class FeedFetchAllCommand extends Command
 
     protected static $defaultName = 'feed:fetch-all';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Cycles through all the feeds and fetches them')
@@ -50,7 +45,7 @@ class FeedFetchAllCommand extends Command
             );
     }
 
-    protected function execute(InputInterface $input, CommandOutput $output)
+    protected function execute(InputInterface $input, CommandOutput $output): int
     {
         $feeds = $this->feedRepository->findAll();
 

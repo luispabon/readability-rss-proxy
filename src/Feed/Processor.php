@@ -198,7 +198,6 @@ class Processor
 
         $counter = 1;
         foreach ($fetchedSuccessfully as $link => $promiseResult) {
-            /** @var RawFeedItem $rawFeedItem */
             $rawFeedItem = $rawFeedItems[$link];
 
             $this->logger->info(sprintf(

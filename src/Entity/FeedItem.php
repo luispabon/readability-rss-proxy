@@ -37,7 +37,7 @@ class FeedItem
     /**
      * @ORM\Column(type="datetimetz")
      */
-    private $lastModified;
+    private DateTimeInterface $lastModified;
 
     /**
      * @var Feed
@@ -60,7 +60,7 @@ class FeedItem
     /**
      * @ORM\Column(type="text", nullable=true)
      */
-    private string $image;
+    private ?string $image;
 
     public function getId(): ?int
     {

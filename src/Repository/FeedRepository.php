@@ -6,7 +6,7 @@ namespace App\Repository;
 use App\Entity\Feed;
 use App\Entity\RssUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Feed|null find($id, $lockMode = null, $lockVersion = null)

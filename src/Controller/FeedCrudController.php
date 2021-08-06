@@ -22,16 +22,8 @@ use Throwable;
  */
 class FeedCrudController extends AbstractController
 {
-    /** @var FeedProcessor */
-    private FeedProcessor $feedProcessor;
-
-    /** @var Permissions */
-    private Permissions $permissions;
-
-    public function __construct(FeedProcessor $feedProcessor, Permissions $permissions)
+    public function __construct(private FeedProcessor $feedProcessor, private Permissions $permissions)
     {
-        $this->feedProcessor = $feedProcessor;
-        $this->permissions   = $permissions;
     }
 
     /**

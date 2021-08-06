@@ -20,18 +20,11 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class RssUserController extends AbstractController
 {
-    private UserPasswordHasherInterface $passwordEncoder;
-    private RssUserRepository           $userRepository;
-    private Permissions                 $permissions;
-
     public function __construct(
-        UserPasswordHasherInterface $passwordHasher,
-        RssUserRepository $userRepository,
-        Permissions $permissions
+        private UserPasswordHasherInterface $passwordHasher,
+        private RssUserRepository $userRepository,
+        private Permissions $permissions
     ) {
-        $this->passwordEncoder = $passwordHasher;
-        $this->userRepository  = $userRepository;
-        $this->permissions     = $permissions;
     }
 
     /**
@@ -132,7 +125,7 @@ class RssUserController extends AbstractController
     {
         $rawPassword = $user->getPassword();
 
-        $user->setPassword($this->passwordEncoder->hashPassword($user, $rawPassword));
+        $user->setPassword($this->passwordHasher->hashPassword($user, $rawPassword));
 
         return $user;
     }

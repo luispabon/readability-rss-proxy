@@ -19,28 +19,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FeedProxyController extends AbstractController
 {
-    /** @var HttpFoundationFactoryInterface */
-    private HttpFoundationFactoryInterface $psrConverter;
-
-    /** @var FeedRepository */
-    private FeedRepository $feedRepository;
-
-    /** @var FeedIo */
-    private FeedIo $feedIo;
-
-    /** @var RssUserRepository */
-    private RssUserRepository $userRepository;
 
     public function __construct(
-        HttpFoundationFactoryInterface $httpFoundationFactory,
-        FeedRepository $feedRepository,
-        RssUserRepository $userRepository,
-        FeedIo $feedIo
+        private HttpFoundationFactoryInterface $httpFoundationFactory,
+        private FeedRepository $feedRepository,
+        private RssUserRepository $userRepository,
+        private FeedIo $feedIo
     ) {
-        $this->psrConverter   = $httpFoundationFactory;
-        $this->feedRepository = $feedRepository;
-        $this->feedIo         = $feedIo;
-        $this->userRepository = $userRepository;
     }
 
     /**
@@ -74,7 +59,7 @@ class FeedProxyController extends AbstractController
 
         $atomResponse = $this->feedIo->getPsrResponse($formattedFeed, 'atom');
 
-        return $this->psrConverter->createResponse($atomResponse);
+        return $this->httpFoundationFactory->createResponse($atomResponse);
     }
 
     /**

@@ -10,14 +10,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    /**
-     * @var RssUserRepository
-     */
-    private RssUserRepository $userRepository;
-
-    public function __construct(RssUserRepository $userRepository)
+    public function __construct(private RssUserRepository $userRepository)
     {
-        $this->userRepository = $userRepository;
     }
 
     public function load(ObjectManager $manager)

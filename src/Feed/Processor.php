@@ -32,32 +32,17 @@ class Processor
 {
     private const FEED_ITEM_BATCH_SIZE = 5;
 
-    private FeedIo             $feedIo;
-    private FeedRepository     $feedRepository;
-    private ClientInterface    $guzzle;
-    private FeedItemRepository $feedItemRepository;
-    private LoggerInterface    $logger;
-    private Favicon            $faviconFinder;
-
-    private string $readabilityEndpoint;
-    private int    $ingestedCount = 0;
+    private int $ingestedCount = 0;
 
     public function __construct(
-        FeedIo $feedIo,
-        FeedRepository $feedRepository,
-        FeedItemRepository $feedItemRepository,
-        Favicon $faviconFinder,
-        ClientInterface $guzzle,
-        string $readabilityEndpoint,
-        LoggerInterface $logger
+        private FeedIo $feedIo,
+        private FeedRepository $feedRepository,
+        private FeedItemRepository $feedItemRepository,
+        private Favicon $faviconFinder,
+        private ClientInterface $guzzle,
+        private string $readabilityEndpoint,
+        private LoggerInterface $logger
     ) {
-        $this->feedIo              = $feedIo;
-        $this->feedRepository      = $feedRepository;
-        $this->feedItemRepository  = $feedItemRepository;
-        $this->faviconFinder       = $faviconFinder;
-        $this->guzzle              = $guzzle;
-        $this->logger              = $logger;
-        $this->readabilityEndpoint = $readabilityEndpoint;
     }
 
     /**

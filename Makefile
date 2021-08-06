@@ -20,7 +20,7 @@ endif
 echo-build-tag:
 	echo $(BUILD_TAG)
 
-dev-init: clean install-mkcert create-certs clean-hosts build-local-php-container init-hosts install-dependencies start clear-cache assets-install init-db load-fixtures
+init: clean install-mkcert create-certs clean-hosts build-local-php-container init-hosts install-dependencies start clear-cache assets-install init-db load-fixtures
 
 build-local-php-container:
 	docker-compose stop php-fpm

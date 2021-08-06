@@ -2,7 +2,7 @@
     "type": "project",
     "license": "proprietary",
     "require": {
-        "php": "^7.4.2",
+        "php": "^8.0.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -21,7 +21,7 @@
         "symfony/framework-bundle": "^5.0",
         "symfony/monolog-bundle": "^3.4",
         "symfony/orm-pack": "^1.0",
-        "symfony/psr-http-message-bridge": "^1.2",
+        "symfony/psr-http-message-bridge": "^2.0",
         "symfony/security-bundle": "^5.0",
         "symfony/security-csrf": "^5.0",
         "symfony/serializer-pack": "^1.0",

@@ -70,7 +70,7 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         return new Passport(
             userBadge: new UserBadge($user->getUsername()),
             credentials: new PasswordCredentials($password),
-            badges: [new CsrfTokenBadge('login', $csrfToken)]
+            badges: [new CsrfTokenBadge($token->getId(), $token->getValue())]
         );
     }
 
@@ -79,9 +79,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         return $request->attributes->get('_route') === 'app_login' && $request->isMethod('POST');
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $targetPath = $this->getTargetPath($request->getSession(), $providerKey);
+        $targetPath = $this->getTargetPath($request->getSession(), $firewallName);
         if ($targetPath === null) {
             $targetPath = $this->urlGenerator->generate('feed_index');
         }

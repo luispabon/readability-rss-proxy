@@ -56,8 +56,7 @@ COPY .env             ./
 
 RUN composer dump-env prod; \
     composer dump-autoload --optimize --classmap-authoritative; \
-    bin/console cache:warmup; \
-    chown www-data:www-data /tmp/site-cache /tmp/site-logs -Rf
+    bin/console cache:warmup
 
 ############
 # Frontend #

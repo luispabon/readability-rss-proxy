@@ -51,6 +51,7 @@ COPY infrastructure/php-fpm/php-fpm-pool-prod.conf /etc/php/8.0/fpm/pool.d/z-opt
 COPY config           ./config
 COPY public/index.php ./public/
 COPY src              ./src
+COPY migrations       ./migrations
 COPY templates        ./templates
 COPY .env             ./
 

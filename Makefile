@@ -25,7 +25,7 @@ init: clean install-mkcert create-certs clean-hosts build-local-php-container in
 build-local-php-container:
 	docker-compose stop php-fpm
 	docker-compose rm php-fpm
-	docker-compose build --pull php-fpm
+	COMPOSE_DOCKER_CLI_BUILD=0 docker-compose build --pull php-fpm
 
 install-dependencies:
 	docker-compose run php-fpm composer -o install
@@ -47,7 +47,7 @@ init-hosts: clean-hosts
 	sudo bin/hosts add 127.0.0.1 $(RSS_PROXY_HOST)
 
 start:
-	docker-compose up -d
+	COMPOSE_DOCKER_CLI_BUILD=0 docker-compose up -d
 
 stop:
 	docker-compose kill

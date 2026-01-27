@@ -27,6 +27,11 @@ build-local-php-container:
 	docker-compose rm php-fpm
 	COMPOSE_DOCKER_CLI_BUILD=0 docker-compose build --pull php-fpm
 
+update-dependencies:
+	docker-compose run php-fpm composer update
+	@echo "*** We need root to fix permissions for the vendor/ folder on some systems"
+	sudo chown $(shell id -u):$(shell id -g) vendor -Rf
+
 install-dependencies:
 	docker-compose run php-fpm composer -o install
 	@echo "*** We need root to fix permissions for the vendor/ folder on some systems"

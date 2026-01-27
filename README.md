@@ -1,39 +1,69 @@
 # readability-rss-proxy
-A self-hosted RSS proxy that will fetch articles and run them through a readability analog
+
+A self-hosted RSS proxy that fetches articles and enriches them using a readability engine. It serves full-text RSS/Atom feeds to your favorite reader, providing a "pseudo-offline" experience.
+
+## Overview
+
+Traditional RSS feeds often only provide a short summary. This proxy:
+1.  **Fetches** the original feed.
+2.  **Extracts** the full content of each article using a `readability-js-server`.
+3.  **Persists** the enriched content in a local database.
+4.  **Serves** a new feed with full-text content.
+
+It also includes a built-in web reader and an admin interface for managing feeds.
+
+For a detailed breakdown of the system components, see [AGENTS.md](AGENTS.md).
 
 ## Status
-Good enough for my own use. Definitely not good enough for other people to use - bit hard to install, reader mode is 
-dodgy and unfinished, and a number of other UX issues.
 
-## Requirements 
+**Beta.** It's functional and used daily by the author, but installation can be tricky, and some UX areas (like the reader mode) are still being refined.
+
+## Requirements
+
 ### Development
-  * Docker
-  * Docker Compose
-  * Make
-  * `libnss3-tools` (or whichever package contains `certutil` in your system)
+*   **Docker & Docker Compose**
+*   **Make**
+*   **`libnss3-tools`** (for `certutil`, used by `mkcert` to set up local SSL)
 
-Run `make init`. This will spin up the local environment and load up some users with some feeds ready to go. Once 
-finished, open [https://rss-proxy.local:7000/](https://rss-proxy.local:7000/). There are two users, both with the same
-feeds but one is admin and the other one isn't:
+### Production / Manual Install
+*   **PHP 8.0+**
+*   **PostgreSQL 9.6+** (Recommended. MySQL is possible but requires manual schema updates as migrations are psql-specific)
+*   **Redis** (for session storage and caching)
+*   **readability-js-server** (The enrichment engine)
+*   **Web server** (Nginx/Apache)
 
-| role  |      username     | password |
-|-------|-------------------|----------|
-|admin  |admin@admin.com    |admin     |
-|regular|non_admin@admin.com|non_admin |
+## Quick Start (Development)
 
-### To actually run it somewhere
-  * php 7.3+
-  * PostgreSQL. MySQL and compatibles are possible, but additional work is required - at the moment only database migrations for psql are provided (you can bypass this by installing the mysql pdo extension and running `bin/console doctrine:schema:update --force` and adjusting the right environment variables, but this is not as resilient as actual migrations). Won't do unless there's demand.
-  * Redis (for storing sessions) + php redis extension
-  * Any webserver
+1.  **Initialize the environment:**
+    ```bash
+    make init
+    ```
+    This command will:
+    *   Build the PHP container.
+    *   Set up local SSL certificates via `mkcert`.
+    *   Configure `rss-proxy.local` in your hosts file.
+    *   Start all services (PHP-FPM, Nginx, PostgreSQL, Redis, Readability server).
+    *   Run migrations and load sample data.
 
-Basically, replicate the environment spun up in [docker-compose.yaml](docker-compose.yaml).
-  
-At the moment there's a full build system based in Make, docker and deployments to kubernetes. I'll be making these
-images available publicly via docker hub at some point.
+2.  **Access the application:**
+    Open [https://rss-proxy.local:7000/](https://rss-proxy.local:7000/)
 
-## Misc notes
+3.  **Default Users:**
 
- * Disable your ad blocker while vising the admin panel. There are no ads or tracking you should 
- worry about, and sometimes they block feed icons (ublock in firefox blocks the bbc logo from 
- their feeds, who knows why).
+| Role | Username | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin@admin.com` | `admin` |
+| **Regular** | `non_admin@admin.com` | `non_admin` |
+
+## Maintenance & CLI Commands
+
+The application uses Symfony console commands for background tasks. When using Docker, run these via `docker-compose exec php-fpm bin/console [command]`.
+
+*   **`feed:fetch-all`**: Manually trigger a refresh of all feeds. (Also available via `make sync-feeds`)
+*   **`feed:delete-old`**: Clean up old feed items.
+*   **`user:create`**: Create a new user.
+
+## Misc Notes
+
+*   **Ad Blockers:** Some ad blockers may mistakenly block feed icons or assets in the admin panel (e.g., uBlock blocking the BBC logo). If icons are missing, try disabling your ad blocker for the proxy domain.
+*   **Production Deployment:** A `Dockerfile` and Kubernetes manifests (`infrastructure/kubernetes`) are provided for deployment inspiration. Basically, you need to replicate the stack defined in `docker-compose.yaml`.
